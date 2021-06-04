@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <style type="text/css">
+        #div_login{
+            /*background-color: #9B9B9B;*/
+            background-color: transparent;
+            opacity: 0.9;
+            margin: 6em auto;
+            height: 400px;
+            width: 500px;
+        }
+        .region{
+            margin-bottom: 25px;
+        }
+        .header{
+            margin: auto 9em;
+        }
+        .header span{
+            color: white;
+            font-size: 80px;
+            margin: auto 0.8em;
+        }
+        .header p{
+            color: white;
+            font-size: 35px;
+            margin: 0.3em auto;
+            
+        }
+        .login-item{
+            margin: 1em auto;
+            width: 400px;
+        }
+        .login-item input{
+            background-color: transparent;
+            text-decoration-color: black;
+            /*opacity: .5;*/
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 2px;
+            height: 40px;
+            padding-left: 35px;
+            border-radius: 9px;
+        }
+        .login-item span{
+            position: relative;
+            top: 34px; left: 10px;
+            color: white;
+            z-index: 1;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        #region_btn button{
+            margin-bottom: 10px;
+            display: inline-block;
+            margin: auto 1.6em;
+            width: 400px;
+            border-radius: 9px;
+        }
+        #btn_conect{
+            background-color: #9B9B9B;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        #btn_redirect_register{
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+{% endblock %}
+{% block app_content %}
+    <body style="background: url({{ url_for('static', filename='img/fondo2.jpg') }}) no-repeat center center fixed;">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="40px">
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <div class="container" id="div_login">
+            <div class="content">
+                <div class="region">
+                    <div class="header">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                        <p><b>Inicia sesión</b></p>
+                    </div>
+                </div>
+                <form name="form-login" id="form_login"></form>
+                    <div class="region">
+                        <div class="login-item">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">
+                        </div>
+                        <div class="login-item">
+                            <span class="glyphicon glyphicon-lock"></span>
+                            <input type="password" class ="form-control" name="password" placeholder="Contraseña">
+                        </div>
+                    </div>
+                    <div class="region">
+                        <div id="region_btn">
+                            <div class="btn">
+                                <button type="button" class="btn btn-default" id="btn_conect">
+                                    <span>Conectar</span>
+                                </button>
+                            </div><br>
+                            <div class="btn">
+                                <button type="button" class="btn btn-warning" id="btn_redirect_register">
+                                    <span>¿No tiene cuenta? Registrate</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+{% endblock %}

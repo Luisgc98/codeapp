@@ -1,0 +1,23 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+    {% block styles %}
+        {{ super() }}
+    {% endblock %}
+    {% block style %}
+      
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    {% block app_content %}
+
+    {% endblock %}
+    {% block scripts %}
+        {{ super() }}
+    {% endblock %}
+    {% block script %}
+    
+    {% endblock %}
+{% endblock %}
