@@ -1,5 +1,11 @@
 from app import create_app
 from flask import redirect, url_for
+from app import login_manager
+from models import User
+
+@login_manager.user_loader
+def load_user(id):
+    return User._byID(id)
 
 app = create_app()
 
