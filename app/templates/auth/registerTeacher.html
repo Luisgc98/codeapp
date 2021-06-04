@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <style type="text/css">
+        #div_login{
+            /*background-color: #9B9B9B;*/
+            background-color: transparent;
+            opacity: 0.9;
+            margin: 3em auto;
+            height: 400px;
+            width: 900px;
+        }
+        .region{
+            margin-bottom: 25px;
+        }
+        .header{
+            margin: auto 25.9em;
+        }
+        .header span{
+            color: white;
+            font-size: 50px;
+            margin: auto 1em;
+        }
+        .header p{
+            color: white;
+            font-size: 30px;
+            margin: 0.3em -3.5em;
+            width: 370px;
+            
+        }
+        .login-item{
+            margin: -1em auto;
+            width: 400px;
+        }
+        .login-item input, .login-item select{
+            background-color: transparent;
+            text-decoration-color: black;
+            /*opacity: .5;*/
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 2px;
+            height: 40px;
+            padding-left: 35px;
+            border-radius: 9px;
+            margin-bottom: -10px;
+            border: 1.5px solid white;
+        }
+        .login-item span{
+            position: relative;
+            top: -35px; left: 10px;
+            color: white;
+            z-index: 1;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        #region_btn{
+            margin: auto 7em;
+        }
+        #region_btn button, #region_btn input{
+            margin-bottom: 10px;
+            display: inline-block;
+            margin: auto 1.6em;
+            width: 600px;
+            border-radius: 9px;
+        }
+        #btn_conect{
+            background-color: #9B9B9B;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        #btn_redirect_register{
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .navbar{
+            background-color: transparent;
+            border: transparent;
+        }
+        .navbar .navbar-brand img{
+            margin-top: -15px;
+            margin-left: -10px;
+        }
+        .navbar .navbar-brand #title_app{
+            position: relative;
+            bottom: 50px; left: 48px;
+            background-color: white;
+            padding: 15px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            border-top-right-radius: 20px;
+        }
+        .row .region-items{
+            float: left;
+            margin-left: 35px;
+        }
+        .identifier-item{
+            width: 700px;
+            margin-top: -25px;
+        }
+        .form-control::placeholder{
+            color: #C6C6C6;
+        }
+        option{
+            background-color: transparent;
+            color: black;
+        }
+    </style>
+{% endblock %}
+{% block app_content %}
+    <body style="background: url({{ url_for('static', filename='img/fondo3.jpg') }}) no-repeat center center fixed;">
+        <div class="opacity-div">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">
+                            <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">
+                            <div id="title_app">
+                                CodeApp
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% for message in get_flashed_messages() %}
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button"
+                                data-dismiss="alert"
+                                class="close"
+                        >&times;</button>
+                        {{message}}
+                    </div>
+                {% endfor %}
+            </nav>
+            <div class="container" id="div_login">
+                <div class="content">
+                    <div class="region">
+                        <div class="header">
+                            <span class="glyphicon glyphicon-qrcode"></span>
+                            <p><b>Regístrate como maestro</b></p>
+                        </div>
+                    </div>
+                    <form name="form-login" id="form_login" method="post">
+                        <div class="region row">
+                            <div class="region-items">
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.user_name, placeholder="Nombre de usuario") }}
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                                </div>
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.email, placeholder="Correo") }}
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                                </div>
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.license, placeholder="Cédula profesional") }}
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                                </div>
+                            </div>
+                            <div class="region-items">
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.specialty, placeholder="Especialidad") }}
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                                </div>
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.password, placeholder="Contraseña") }}
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                                </div>
+                                <div class="login-item">
+                                    {{ wtf.form_field(form.confirm_password, placeholder="Confirmar contraseña") }}
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="region">
+                            <div id="region_btn">
+                                <div class="btn">
+                                    {{ wtf.form_field(form.submit, id="btn_conect") }}
+                                </div><br>
+                                <div class="btn">
+                                    <button type="button" class="btn btn-warning" id="btn_redirect_register" onclick="javascript:location.href='{{ url_for("auth.login") }}'">
+                                        <span>¿Ya tiene cuenta? Inicia sesión</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+{% endblock %}

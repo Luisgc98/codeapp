@@ -6,25 +6,26 @@
             /*background-color: #9B9B9B;*/
             background-color: transparent;
             opacity: 0.9;
-            margin: 4em auto;
+            margin: 3em auto;
             height: 400px;
-            width: 500px;
+            width: 900px;
         }
         .region{
             margin-bottom: 25px;
         }
         .header{
-            margin: auto 9em;
+            margin: auto 25.9em;
         }
         .header span{
             color: white;
-            font-size: 80px;
-            margin: auto 0.8em;
+            font-size: 50px;
+            margin: auto 1em;
         }
         .header p{
             color: white;
-            font-size: 35px;
-            margin: 0.3em auto;
+            font-size: 30px;
+            margin: 0.3em -3.5em;
+            width: 360px;
             
         }
         .login-item{
@@ -43,6 +44,7 @@
             padding-left: 35px;
             border-radius: 9px;
             margin-bottom: -10px;
+            border: 1.5px solid white;
         }
         .login-item span{
             position: relative;
@@ -53,13 +55,13 @@
             margin-right: 10px;
         }
         #region_btn{
-            margin-top: -30px;
+            margin: auto 7em;
         }
         #region_btn button, #region_btn input{
             margin-bottom: 10px;
             display: inline-block;
             margin: auto 1.6em;
-            width: 400px;
+            width: 600px;
             border-radius: 9px;
         }
         #btn_conect{
@@ -89,10 +91,21 @@
             font-weight: bold;
             border-top-right-radius: 20px;
         }
+        .row .region-items{
+            float: left;
+            margin-left: 35px;
+        }
+        .identifier-item{
+            width: 700px;
+            margin-top: -25px;
+        }
+        .form-control::placeholder{
+            color: #C6C6C6;
+        }
     </style>
 {% endblock %}
 {% block app_content %}
-    <body style="background: url({{ url_for('static', filename='img/fondo2.jpg') }}) no-repeat center center fixed;">
+    <body style="background: url({{ url_for('static', filename='img/fondo3.jpg') }}) no-repeat center center fixed;">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -119,20 +132,41 @@
                 <div class="region">
                     <div class="header">
                         <span class="glyphicon glyphicon-qrcode"></span>
-                        <p><b>Inicia sesión</b></p>
+                        <p><b>Regístrate como alumno</b></p>
                     </div>
                 </div>
                 <form name="form-login" id="form_login" method="post">
-                    <div class="region">
-                        <div class="login-item">
-                            {{ wtf.form_field(form.user_name, placeholder="Nombre de usuario") }}
-                            <span class="glyphicon glyphicon-user"></span>
-                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                    <div class="region row">
+                        <div class="region-items">
+                            <div class="login-item">
+                                {{ wtf.form_field(form.user_name, placeholder="Nombre de usuario") }}
+                                <span class="glyphicon glyphicon-user"></span>
+                                <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                            </div>
+                            <div class="login-item">
+                                {{ wtf.form_field(form.email, placeholder="Correo") }}
+                                <span class="glyphicon glyphicon-envelope"></span>
+                                <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                            </div>
                         </div>
-                        <div class="login-item">
-                            {{ wtf.form_field(form.password, placeholder="Contraseña") }}
-                            <span class="glyphicon glyphicon-lock"></span>
-                            <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                        <div class="region-items">
+                            <div class="login-item">
+                                {{ wtf.form_field(form.password, placeholder="Contraseña") }}
+                                <span class="glyphicon glyphicon-lock"></span>
+                                <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                            </div>
+                            <div class="login-item">
+                                {{ wtf.form_field(form.confirm_password, placeholder="Confirmar contraseña") }}
+                                <span class="glyphicon glyphicon-remove"></span>
+                                <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="region-items">
+                        <div class="login-item identifier-item">
+                            {{ wtf.form_field(form.identifier, placeholder="Clave de identificación") }}
+                            <span class="glyphicon glyphicon-saved"></span>
+                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
                         </div>
                     </div>
                     <div class="region">
@@ -141,8 +175,8 @@
                                 {{ wtf.form_field(form.submit, id="btn_conect") }}
                             </div><br>
                             <div class="btn">
-                                <button type="button" class="btn btn-warning" id="btn_redirect_register">
-                                    <span>¿No tiene cuenta? Registrate</span>
+                                <button type="button" class="btn btn-warning" id="btn_redirect_register" onclick="javascript:location.href='{{ url_for("auth.login") }}'">
+                                    <span>¿Ya tiene cuenta? Inicia sesión</span>
                                 </button>
                             </div>
                         </div>
