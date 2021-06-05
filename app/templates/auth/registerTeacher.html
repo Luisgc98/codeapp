@@ -23,8 +23,8 @@
         }
         .header p{
             color: white;
-            font-size: 30px;
-            margin: 0.3em -3.5em;
+            font-size: 25px;
+            margin: 0.3em -3.2em;
             width: 370px;
             
         }
@@ -38,7 +38,7 @@
             /*opacity: .5;*/
             color: white;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 12px;
             letter-spacing: 2px;
             height: 40px;
             padding-left: 35px;
@@ -63,6 +63,7 @@
             margin: auto 1.6em;
             width: 600px;
             border-radius: 9px;
+            font-size: 12px;
         }
         #btn_conect{
             background-color: #9B9B9B;
@@ -154,15 +155,15 @@
                                     <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
                                 </div>
                                 <div class="login-item">
-                                    {{ wtf.form_field(form.license, placeholder="Cédula profesional") }}
-                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    {{ wtf.form_field(form.license, placeholder="Cédula profesional", type="number") }}
+                                    <span class="glyphicon glyphicon-barcode"></span>
                                     <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
                                 </div>
                             </div>
                             <div class="region-items">
                                 <div class="login-item">
                                     {{ wtf.form_field(form.specialty, placeholder="Especialidad") }}
-                                    <span class="glyphicon glyphicon-lock"></span>
+                                    <span class="glyphicon glyphicon-briefcase"></span>
                                     <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
                                 </div>
                                 <div class="login-item">

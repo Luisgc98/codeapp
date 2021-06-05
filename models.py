@@ -23,14 +23,14 @@ class Role(db.Model):
         return count
 
 class User(db.Model, UserMixin):
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(length=80))
     email = db.Column(db.String(length=200), unique=True)
     password = db.Column(db.String(length=100))
 
     @staticmethod
     def _byID(id):
-        return User.query.filter_by(user_id=id).first()
+        return User.query.filter_by(id=id).first()
 
     @staticmethod
     def _byEmail(user_email):
@@ -64,14 +64,14 @@ class Teacher(User):
         try:
             db.session.add(user)
             db.session.commit()
-            return True
+            return 'Maestro registrado correctamente'
         except:
             db.session.rollback()
-            return False
+            return 'Hubo un error al ingresar el usuario, inténtelo mas tarde.'
 
 class UserRole(db.Model):
     user_role_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.role_id'))
 
     @staticmethod
@@ -97,7 +97,7 @@ class ClassRoom(db.Model):
     room_id = db.Column(db.Integer, primary_key=True)
     room_name = db.Column(db.String(length=30), default='Desconocido')
     room_code = db.Column(db.String(length=30), unique=True)
-    teacher_id = db.Column(db.String(length=100), db.ForeignKey('user.user_id'))
+    teacher_id = db.Column(db.String(length=100), db.ForeignKey('user.id'))
 
     def generateCode(self):
         abc = 'abcdefghijklmnopqrstuvwxyz123456789'
@@ -128,10 +128,40 @@ class ClassRoom(db.Model):
             db.session.rollback()
             return False
 
+class Group(db.Model):
+    group_id = db.Column(db.Integer, primary_key=True)
+    group_code = db.Column(db.String(length=10), unique=True)
+    class_subject = db.Column(db.String(length=30))
+    times = db.Column(db.String(length=30), default="09:00am-06:00pm")
+    room_id = db.Column(db.Integer, db.ForeignKey('class_room.room_id'))
+
+    @staticmethod
+    def _getCountGroups():
+        count = Group.query.all()
+        if count is None: 
+            count = 1
+        else:
+            count = len(count)
+        return count
+
+    @staticmethod
+    def _getGroupCode(code):
+        return Group.query.filter_by(group_code=code).first()
+
+    @staticmethod
+    def addGroup(group):
+        try:
+            db.session.add(group)
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+
 class StudentClass(db.Model):
     class_id = db.Column(db.Integer, primary_key=True)
-    room_id = db.Column(db.Integer, db.ForeignKey('class_room.room_id'))
-    student_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
 
     @staticmethod
     def _getCountStudents():
@@ -146,6 +176,32 @@ class StudentClass(db.Model):
     def addStudent(user):
         try:
             db.session.add(user)
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+
+class Task(db.Model):
+    task_id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
+    task_description = db.Column(db.String(length=1000))
+    deliverie_date = db.Column(db.Date)
+    is_active = db.Column(db.String(length=1), default="Y")
+
+    @staticmethod
+    def _getCountTask():
+        count = Task.query.all()
+        if count is None: 
+            count = 1
+        else:
+            count = len(count)
+        return count
+
+    @staticmethod
+    def addTask(task):
+        try:
+            db.session.add(task)
             db.session.commit()
             return True
         except:

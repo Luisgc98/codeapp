@@ -4,8 +4,8 @@ from app import login_manager
 from models import User
 
 @login_manager.user_loader
-def load_user(id):
-    return User._byID(id)
+def load_user(user_id):
+    return User._byID(user_id)
 
 app = create_app()
 
