@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style type="text/css">
+        body{
+            overflow: hidden;
+        }
+        .navbar{
+            background-color: #000734;
+            position: relative;
+            top: -1px;
+            border: transparent;
+        }
+        .navbar-brand{
+            position: relative;
+            left: 50px;
+        }
+        .navbar .navbar-brand img{
+            margin-top: -8px;
+            border-radius: 5px;
+        }
+        .navbar .navbar-brand #title_app{
+            position: relative;
+            bottom: 50px; left: 58px;
+            background-color: transparent;
+            color: white;
+            padding: 15px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            border-top-right-radius: 20px;
+        }
+        #btn_logout{
+            margin-right: 15px;
+            background-color: transparent;
+            color: white;
+        }
+        .region{
+            position: absolute;
+            left: 100px;
+            width: 80%;
+        }
+        .region .modal-title{
+            letter-spacing: 3px;
+            font-size: 30px;
+        }
+        .region .modal-subtitle{
+            letter-spacing: 3px;
+            font-size: 20px;
+        }
+        .region .report{
+            margin: 10em auto;
+        }
+        #BTN_BACK{
+            position: absolute;
+            font-size: 25px;
+            color: white;
+            top: 12px;
+            left: 13px;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            padding: 3px;
+            background-color: transparent;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #BTN_BACK span{
+            margin-top: 5px;
+        }
+        #BTN_REMOVE_GROUP, #TIMES_GROUP{
+            z-index: 1;
+            position: absolute;
+            right: 10px;
+            top: 78px;
+            float: left;
+        }
+        #TIMES_GROUP{
+            right: 170px;
+        }
+    </style>
+{% endblock %}
+{% block app_content %}
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div id="BTN_BACK" onclick="javascript:location.href = '{{ url_for("main.home") }}'">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </div>
+                    <a class="navbar-brand" href="javascript:location.reload()">
+                        <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">
+                        <div id="title_app">
+                            CodeApp
+                        </div>
+                    </a>
+                </div>
+                <div class="navbar-text navbar-right">
+                    <div class="dropdown">
+                        <button type="button" id="btn_logout" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ user.email }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="btn_logout">
+                            <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button"
+                            data-dismiss="alert"
+                            class="close"
+                    >&times;</button>
+                    {{message}}
+                </div>
+            {% endfor %}
+        </nav>
+        <div class="region">
+            <div class="modal-header">
+                <p class="modal-title">Grupo: {{ group.group_code }}</p>
+            </div>
+            <p class="modal-subtitle">Profesor: {{ group._getTeacherGroup().user_name }}</p>
+            <button type="button" class="btn btn-default btn-danger" id="BTN_REMOVE_GROUP">
+                <span class="glyphicon glyphicon-remove"></span>
+                Remover grupo
+            </button>
+            <button type="button" class="btn btn-default btn-warning" id="TIMES_GROUP">
+                <span class="glyphicon glyphicon-time"></span>
+                Horarios
+            </button>
+        </div>
+        <div class="region">
+            
+        </div>
+        <script type="text/javascript">
+
+        </script>
+    </body>
+{% endblock %}

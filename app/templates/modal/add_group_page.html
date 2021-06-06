@@ -1,4 +1,3 @@
-{% import 'bootstrap/wtf.html' as wtf %}
 <style type="text/css">
     .login-item{
         margin: -1em auto;
@@ -76,7 +75,7 @@
             <span class="glyphicon glyphicon-blackboard"></span>
             <div id="modal_title_icon"><h3>Agregar grupo</h3></div>
         </div>
-        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addGroup', send=True) }}">
+        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addGroup') }}">
             <div class="modal-content">
                 <div class="region-row">
                     <div class="region-items">

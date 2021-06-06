@@ -30,5 +30,5 @@ class AddGroupForm(FlaskForm):
                 times='De: '+self.time_init.data+' a: '+self.time_end.data,
                 room_id=self._getRoomId(user.id)
             )
-            msg = Group.addGroup(group)
+            msg = ClassGroup.addGroup(group)
             return msg

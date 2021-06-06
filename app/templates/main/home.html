@@ -152,16 +152,16 @@
                     </div>
                 </div>
             </div>
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button"
+                            data-dismiss="alert"
+                            class="close"
+                    >&times;</button>
+                    {{message}}
+                </div>
+            {% endfor %}
         </nav>
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button"
-                        data-dismiss="alert"
-                        class="close"
-                >&times;</button>
-                {{message}}
-            </div>
-        {% endfor %}
         <div class="region">
             <div class="modal-header">
                 <p class="modal-title">Salón de Clases</p>
@@ -176,38 +176,25 @@
         <div class="region">
             <div class="report">
                 <div class="row row-card">
-                    <div class="card card-group">
-                        <div class="card-icon">
-                            <span class="glyphicon glyphicon-blackboard"></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="body-header">
-                                Grupo: &nbsp;&nbsp;&nbsp;{{ '1' }}
+                    {% if groups %}
+                        {% for group in groups %}
+                            <div class="card card-group" onclick="javascript:location.href = '{{ url_for("main.group", group_id=group.group_id) }}'">
+                                <div class="card-icon">
+                                    <span class="glyphicon glyphicon-blackboard"></span>
+                                </div><div class="card-body">
+                                    <div class="body-header">
+                                        Grupo: {{ group.group_code }}
+                                    </div>
+                                    <div class="body-content">
+                                        Profesor: {{ group._getTeacherGroup().user_name }}
+                                    </div>
+                                    <div class="body-footer">
+                                        Tareas: {{ group._getTasksGroup(count=True) }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="body-content">
-                                Profesor: {{ 'Luis GC' }}
-                            </div>
-                            <div class="body-footer">
-                                Tareas: {{ '0' }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-group">
-                        <div class="card-icon">
-                            <span class="glyphicon glyphicon-blackboard"></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="body-header">
-                                Grupo: {{ '2' }}
-                            </div>
-                            <div class="body-content">
-                                Profesor: {{ 'Ejemplo 1' }}
-                            </div>
-                            <div class="body-footer">
-                                Tareas: {{ '0' }}
-                            </div>
-                        </div>
-                    </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -217,18 +204,10 @@
             </a>
         </div>
         <div class="modal fade" role="dialog" id="MODAL_ADD_GROUP">
-    
+            {% include "modal/add_group_page.html" %}
         </div>
         <script type="text/javascript">
-            $('#BTN_ADD_GROUP').on('click', function(){
-                var url = "{{ url_for('main.addGroup') }}";
-                $("#MODAL_ADD_GROUP").load(url);
-            })
-            {% if groups %}
-                {% for group in groups %}
-                    console.log('funciona')
-                {% endfor %}
-            {% endif %}
+
         </script>
     </body>
 {% endblock %}

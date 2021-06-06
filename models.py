@@ -155,8 +155,24 @@ class ClassGroup(db.Model):
     @staticmethod
     def _getGroup(group_id=None, all=False):
         if all:
-            ClassGroup.query.all()
+            return ClassGroup.query.all()
         return ClassGroup.query.filter_by(group_id=group_id).first()
+
+    def _getTeacherGroup(self):
+        teacher = User.query.filter_by(
+            id= ClassRoom.query.filter_by(
+                room_id=self.room_id
+            ).first().teacher_id
+        ).first()
+        return teacher
+
+    def _getTasksGroup(self, count=False):
+        tasks = Task.query.filter_by(group_id=self.group_id).first()
+        if count and tasks:
+            tasks = len(tasks)
+        elif tasks is None and count:
+            tasks = 'Ninguna'
+        return tasks
     
     @staticmethod
     def addGroup(group):
@@ -171,7 +187,7 @@ class ClassGroup(db.Model):
 class StudentClass(db.Model):
     class_id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
 
     @staticmethod
     def _getCountStudents():
@@ -194,7 +210,7 @@ class StudentClass(db.Model):
 
 class Task(db.Model):
     task_id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
     task_description = db.Column(db.String(length=1000))
     deliverie_date = db.Column(db.Date)
     is_active = db.Column(db.String(length=1), default="Y")

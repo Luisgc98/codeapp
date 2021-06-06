@@ -7,29 +7,25 @@ from models import ClassGroup
 @main.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+    form = AddGroupForm()
     groups = ClassGroup._getGroup(all=True)
-    print(groups)
 
-    return render_template('main/home.html', user=current_user, groups=groups)
+    return render_template('main/home.html', user=current_user, groups=groups, form=form)
 
-@main.route('/add_group/<send>', methods=['GET', 'POST'])
 @main.route('/add_group', methods=['GET', 'POST'])
 @login_required
-def addGroup(send=False):
+def addGroup():
     form = AddGroupForm()
     
-    if send and request.method == 'POST':
-        print(current_user)
+    if request.method == 'POST':
         group_valid = form.addGroup(current_user)
         if type(group_valid) == str:
             flash(group_valid)
         else:
             flash('Grupo ya existente.')
         return redirect(url_for('main.home'))
-    
-    return render_template('modal/add_group_page.html', form=form)
 
-@main.route('/generate_code', methods=['GET'])
+@main.route('/generate_code', methods=['GET', 'POST'])
 @login_required
 def generateCode():
     query = str(ClassGroup._getCountGroups())
@@ -37,3 +33,10 @@ def generateCode():
     result = 'GROUP_'+query
 
     return result
+
+@main.route('/group/<group_id>', methods=['GET', 'POST'])
+@login_required
+def group(group_id):
+    group = ClassGroup._getGroup(group_id=group_id)
+    
+    return render_template('main/group.html', user=current_user, group=group)
