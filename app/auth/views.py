@@ -3,7 +3,7 @@ from werkzeug.utils import redirect
 from . import auth
 from flask import render_template, request, flash
 from .forms import LoginForm, RegisterStudentForm, RegisterTeacherForm
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,6 +55,7 @@ def registerTeacher():
     return render_template('auth/registerTeacher.html', form=form)
 
 @auth.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))

@@ -2,7 +2,7 @@ from flask import flash
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, PasswordField, SubmitField, SelectField, IntegerField
 from wtforms.validators import DataRequired
-from models import Group, StudentClass, Teacher, User, ClassRoom, UserRole
+from models import ClassGroup, StudentClass, Teacher, User, ClassRoom, UserRole
 from werkzeug.security import generate_password_hash, check_password_hash
 
 validators = [DataRequired()]
@@ -59,7 +59,8 @@ class RegisterStudentForm(FlaskForm):
             return msg
 
     def validateIdentifier(self):
-        if Group._getGroupCode(self.identifier.data):
+        if ClassGroup._getGroupCode(self.identifier.data)\
+            or ClassRoom._getRoomCode(self.identifier.data):
             self.registerUser()
         else:
             return None

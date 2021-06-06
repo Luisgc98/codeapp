@@ -34,11 +34,12 @@
             background-color: transparent;
             color: white;
         }
-        .btn-opcs{
+        #btn_opcs{
             position: absolute;
-            font-size: 30px;
+            font-size: 25px;
             color: white;
-            top: 7px;
+            top: 12px;
+            left: 13px;
             align-items: center;
             align-content: center;
             text-align: center;
@@ -46,22 +47,23 @@
             background-color: transparent;
             border-radius: 3px;
         }
-        .btn-opcs span{
+        #btn_opcs span{
             margin-top: 5px;
         }
         .navigation{
             display: inline-block;
-            margin-top: -21.8px;
-            width: 60px;
+            position: relative;
+            top: -20px;
+            width: 55px;
             min-height: 100vh;
             background-color: #000734;
         } 
         .navigation a{
             display: block;
             text-align: center;
-            padding: 10px;
+            padding: 8px;
             color: white;
-            font-size: 30px;
+            font-size: 23px;
             border-bottom: 1px solid white;
         }
         .region{
@@ -77,6 +79,50 @@
             letter-spacing: 3px;
             font-size: 20px;
         }
+        .region .report{
+            margin: 10em auto;
+        }
+        .region .report .card{
+            border: 1px solid black;
+            border-radius: 5px;
+            width: 290px;
+            height: 120px;
+            margin: 10px;
+            float: left;
+            cursor: pointer;
+        }
+        .card-group .card-icon{
+            float: right;
+            background-color: #000734;
+            width: 90px;
+            height: 90px;
+            margin: 16px 12px 0 0;
+            border-radius: 50%;
+        }
+        .card-group .card-icon span{
+            font-size: 60px;
+            margin: 15px;
+            color: white;
+        }
+        .card-body{
+            margin: 20px;
+            width: 155px;
+            margin-top: 15px;
+        }
+        .card-body .body-header{
+            color:black;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #BDBDBD;
+            font-size: 16.9px;
+            font-weight: bold;
+        }
+        #BTN_ADD_GROUP{
+            z-index: 1;
+            position: absolute;
+            right: 10px;
+            top: 78px;
+        }
     </style>
 {% endblock %}
 {% block app_content %}
@@ -84,7 +130,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <div class="btn-opcs">
+                    <div id="btn_opcs">
                         <span class="glyphicon glyphicon-menu-hamburger"></span>
                     </div>
                     <a class="navbar-brand" href="javascript:location.reload()">
@@ -121,14 +167,68 @@
                 <p class="modal-title">Salón de Clases</p>
             </div>
             <p class="modal-subtitle">Grupos</p>
+            <button type="button" class="btn btn-default btn-success" id="BTN_ADD_GROUP"
+            data-toggle="modal" data-target="#MODAL_ADD_GROUP">
+                <span class="glyphicon glyphicon-plus"></span>
+                Agregar grupo
+            </button>
         </div>
         <div class="region">
-            
+            <div class="report">
+                <div class="row row-card">
+                    <div class="card card-group">
+                        <div class="card-icon">
+                            <span class="glyphicon glyphicon-blackboard"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="body-header">
+                                Grupo: &nbsp;&nbsp;&nbsp;{{ '1' }}
+                            </div>
+                            <div class="body-content">
+                                Profesor: {{ 'Luis GC' }}
+                            </div>
+                            <div class="body-footer">
+                                Tareas: {{ '0' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-group">
+                        <div class="card-icon">
+                            <span class="glyphicon glyphicon-blackboard"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="body-header">
+                                Grupo: {{ '2' }}
+                            </div>
+                            <div class="body-content">
+                                Profesor: {{ 'Ejemplo 1' }}
+                            </div>
+                            <div class="body-footer">
+                                Tareas: {{ '0' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="navigation">
             <a href="{{ url_for('main.home') }}">
                 <span class="glyphicon glyphicon-home"></span>
             </a>
         </div>
+        <div class="modal fade" role="dialog" id="MODAL_ADD_GROUP">
+    
+        </div>
+        <script type="text/javascript">
+            $('#BTN_ADD_GROUP').on('click', function(){
+                var url = "{{ url_for('main.addGroup') }}";
+                $("#MODAL_ADD_GROUP").load(url);
+            })
+            {% if groups %}
+                {% for group in groups %}
+                    console.log('funciona')
+                {% endfor %}
+            {% endif %}
+        </script>
     </body>
 {% endblock %}

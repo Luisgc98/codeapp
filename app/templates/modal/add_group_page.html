@@ -1,0 +1,134 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+<style type="text/css">
+    .login-item{
+        margin: -1em auto;
+        width: 400px;
+    }
+    .login-item input{
+        background-color: transparent;
+        text-decoration-color: black;
+        /*opacity: .5;*/
+        color: black;
+        font-weight: bold;
+        font-size: 12px;
+        letter-spacing: 2px;
+        height: 40px;
+        padding-left: 35px;
+        border-radius: 9px;
+        margin-bottom: -10px;
+        border: 1.5px solid black;
+    }
+    .login-item span{
+        position: relative;
+        top: -35px; left: 10px;
+        color: black;
+        z-index: 1;
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    #BTN_ADD{
+        background-color: #000734;
+        color: white;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    #BTN_CANCEL{
+        font-weight: bold;
+        letter-spacing: 1px;
+        position: absolute;
+        left: 20px;
+        bottom: 22px;
+    }
+    .modal-header span{
+        position: absolute;
+        top: 28px;
+        font-size: 40px;
+    }
+    #modal_title_icon{
+        margin-left: 55px;
+    }
+    #time_init{
+        float: left;
+    }
+    #time_end{
+        float: right;
+        margin-top: -48px;
+    }
+    .item-time #end label{
+        position: relative;
+        top: -45px;
+        left: 38px;
+    }
+    .field-time{
+        width: 180px;
+    }
+    #GENERATE_CODE{
+        float: right;
+        margin-bottom: 5px;
+    }
+</style>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal" type="button">                    
+                &times;
+            </button>
+            <span class="glyphicon glyphicon-blackboard"></span>
+            <div id="modal_title_icon"><h3>Agregar grupo</h3></div>
+        </div>
+        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addGroup', send=True) }}">
+            <div class="modal-content">
+                <div class="region-row">
+                    <div class="region-items">
+                        <div class="login-item">
+                            {{ wtf.form_field(form.group_code, placeholder="Código de grupo") }}
+                            <span class="glyphicon glyphicon-blackboard"></span>
+                            <button type="button" class="btn btn-default" id="GENERATE_CODE" onclick="generateCode()">Generar código automáticamente</button>
+                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                        </div>
+                        <div class="login-item">
+                            {{ wtf.form_field(form.subject, placeholder="Materia") }}
+                            <span class="glyphicon glyphicon-education"></span>
+                            <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
+                        </div>
+                    </div>
+                </div>
+                <div class="region-row">
+                    <div class="region-items item-time">
+                        <div class="login-item">
+                            <p>Ingrese el horario en el que estará dando clases en este grupo.</p>
+                            <label for="time_init">Empieza:</label>
+                            {{ wtf.form_field(form.time_init, placeholder="Empieza", type="time", class="field-time") }}
+                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                        </div>
+                    </div>
+                    <div class="region-items item-time">
+                        <div class="login-item" id="end">
+                            <label for="time_end">Termina:</label>
+                            {{ wtf.form_field(form.time_end, placeholder="Termina", type="time", class="field-time") }}
+                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="BTN_CANCEL">
+                        <span>Cancelar</span>
+                    </button>
+                </div>
+                <div class="btn">
+                    {{ wtf.form_field(form.submit, id="BTN_ADD") }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    function generateCode(){
+        var url = "{{ url_for('main.generateCode') }}";
+        $.get(url, function(result){
+            $("#group_code").val(result);
+        })
+    }
+</script>

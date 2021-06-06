@@ -117,6 +117,10 @@ class ClassRoom(db.Model):
     @staticmethod
     def _getRoomCode(code):
         return ClassRoom.query.filter_by(room_code=code).first()
+    
+    @staticmethod
+    def _getByTeacher(teacher_id):
+        return ClassRoom.query.filter_by(teacher_id=teacher_id).first()
 
     @staticmethod
     def addClassRoom(room):
@@ -128,7 +132,7 @@ class ClassRoom(db.Model):
             db.session.rollback()
             return False
 
-class Group(db.Model):
+class ClassGroup(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
     group_code = db.Column(db.String(length=10), unique=True)
     class_subject = db.Column(db.String(length=30))
@@ -137,7 +141,7 @@ class Group(db.Model):
 
     @staticmethod
     def _getCountGroups():
-        count = Group.query.all()
+        count = ClassGroup.query.all()
         if count is None: 
             count = 1
         else:
@@ -146,17 +150,23 @@ class Group(db.Model):
 
     @staticmethod
     def _getGroupCode(code):
-        return Group.query.filter_by(group_code=code).first()
+        return ClassGroup.query.filter_by(group_code=code).first()
 
+    @staticmethod
+    def _getGroup(group_id=None, all=False):
+        if all:
+            ClassGroup.query.all()
+        return ClassGroup.query.filter_by(group_id=group_id).first()
+    
     @staticmethod
     def addGroup(group):
         try:
             db.session.add(group)
             db.session.commit()
-            return True
+            return 'Grupo agregado con éxito.'
         except:
             db.session.rollback()
-            return False
+            return 'Hubo un error, intente de nuevo más tarde.'
 
 class StudentClass(db.Model):
     class_id = db.Column(db.Integer, primary_key=True)
