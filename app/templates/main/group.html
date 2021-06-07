@@ -67,7 +67,10 @@
         #BTN_BACK span{
             margin-top: 5px;
         }
-        #BTN_REMOVE_GROUP, #TIMES_GROUP{
+        #BTN_REMOVE_GROUP, 
+        #TIMES_GROUP,
+        #ADD_CLASS,
+        #ADD_STUDENT{
             z-index: 1;
             position: absolute;
             right: 10px;
@@ -76,6 +79,12 @@
         }
         #TIMES_GROUP{
             right: 170px;
+        }
+        #ADD_CLASS{
+            right: 290px;
+        }
+        #ADD_STUDENT{
+            right: 460px;
         }
     </style>
 {% endblock %}
@@ -121,20 +130,43 @@
                 <p class="modal-title">Grupo: {{ group.group_code }}</p>
             </div>
             <p class="modal-subtitle">Profesor: {{ group._getTeacherGroup().user_name }}</p>
-            <button type="button" class="btn btn-default btn-danger" id="BTN_REMOVE_GROUP">
+            <button type="button" class="btn btn-default btn-danger" id="BTN_REMOVE_GROUP"
+            onclick="confirmDelete({{ group.group_id }})">
                 <span class="glyphicon glyphicon-remove"></span>
                 Remover grupo
             </button>
-            <button type="button" class="btn btn-default btn-warning" id="TIMES_GROUP">
+            <button type="button" class="btn btn-default btn-primary" id="TIMES_GROUP">
                 <span class="glyphicon glyphicon-time"></span>
                 Horarios
+            </button>
+            <button type="button" class="btn btn-default btn-primary" id="ADD_CLASS">
+                <span class="glyphicon glyphicon-education"></span>
+                Agregar materia
+            </button>
+            <button type="button" class="btn btn-default btn-success" id="ADD_STUDENT">
+                <span class="glyphicon glyphicon-user"></span>
+                Agregar alumno
             </button>
         </div>
         <div class="region">
             
         </div>
         <script type="text/javascript">
-
+            function confirmDelete(group_id){
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¿Seguro de eliminar este grupo?',
+                    text: 'Se eliminaran todos los datos referentes a este grupo.',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Confirmar'
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        var url = '{{ url_for("main.deleteGroup", group_id="") }}'+group_id;
+                        location.href = url;
+                    }
+                });
+            }
         </script>
     </body>
 {% endblock %}

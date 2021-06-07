@@ -25,6 +25,14 @@ def addGroup():
             flash('Grupo ya existente.')
         return redirect(url_for('main.home'))
 
+@main.route('/delete_group/<group_id>', methods=['GET', 'POST'])
+@login_required
+def deleteGroup(group_id):
+    group = ClassGroup._getGroup(group_id)
+    msg = ClassGroup.deleteGroup(group)
+    flash(msg)
+    return redirect(url_for('main.home'))
+
 @main.route('/generate_code', methods=['GET', 'POST'])
 @login_required
 def generateCode():

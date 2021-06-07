@@ -19,7 +19,7 @@
     }
     .login-item span{
         position: relative;
-        top: -35px; left: 10px;
+        top: -48px; left: 10px;
         color: black;
         z-index: 1;
         font-size: 18px;
@@ -51,19 +51,20 @@
     }
     #time_end{
         float: right;
-        margin-top: -48px;
+        margin-top: -76px;
     }
     .item-time #end label{
         position: relative;
-        top: -45px;
-        left: 38px;
+        top: -75px;
+        left: 218px;
     }
     .field-time{
         width: 180px;
     }
     #GENERATE_CODE{
-        float: right;
-        margin-bottom: 5px;
+        position: relative;
+        margin-bottom: 25px;
+        left: 130px;
     }
 </style>
 <div class="modal-dialog">
@@ -83,28 +84,6 @@
                             {{ wtf.form_field(form.group_code, placeholder="Código de grupo") }}
                             <span class="glyphicon glyphicon-blackboard"></span>
                             <button type="button" class="btn btn-default" id="GENERATE_CODE" onclick="generateCode()">Generar código automáticamente</button>
-                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
-                        </div>
-                        <div class="login-item">
-                            {{ wtf.form_field(form.subject, placeholder="Materia") }}
-                            <span class="glyphicon glyphicon-education"></span>
-                            <!--<input type="password" class ="form-control" name="password" placeholder="Contraseña">-->
-                        </div>
-                    </div>
-                </div>
-                <div class="region-row">
-                    <div class="region-items item-time">
-                        <div class="login-item">
-                            <p>Ingrese el horario en el que estará dando clases en este grupo.</p>
-                            <label for="time_init">Empieza:</label>
-                            {{ wtf.form_field(form.time_init, placeholder="Empieza", type="time", class="field-time") }}
-                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
-                        </div>
-                    </div>
-                    <div class="region-items item-time">
-                        <div class="login-item" id="end">
-                            <label for="time_end">Termina:</label>
-                            {{ wtf.form_field(form.time_end, placeholder="Termina", type="time", class="field-time") }}
                             <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
                         </div>
                     </div>

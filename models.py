@@ -135,8 +135,6 @@ class ClassRoom(db.Model):
 class ClassGroup(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
     group_code = db.Column(db.String(length=10), unique=True)
-    class_subject = db.Column(db.String(length=30))
-    times = db.Column(db.String(length=30), default="09:00am-06:00pm")
     room_id = db.Column(db.Integer, db.ForeignKey('class_room.room_id'))
 
     @staticmethod
@@ -167,12 +165,18 @@ class ClassGroup(db.Model):
         return teacher
 
     def _getTasksGroup(self, count=False):
-        tasks = Task.query.filter_by(group_id=self.group_id).first()
-        if count and tasks:
-            tasks = len(tasks)
-        elif tasks is None and count:
-            tasks = 'Ninguna'
-        return tasks
+        class_subject = ClassSubject.query.filter_by(group_id=self.group_id).first()
+        if class_subject is not None:
+            tasks = Task.query.filter_by(
+                class_id= class_subject.class_id
+            ).first()
+            if count and tasks:
+                tasks = len(tasks)
+            elif tasks is None and count:
+                tasks = 'Ninguna'
+            return tasks
+        else:
+            return 'Ninguna clase registrada'
     
     @staticmethod
     def addGroup(group):
@@ -183,11 +187,98 @@ class ClassGroup(db.Model):
         except:
             db.session.rollback()
             return 'Hubo un error, intente de nuevo más tarde.'
-
-class StudentClass(db.Model):
+    
+    @staticmethod
+    def deleteGroup(group):
+        try:
+            db.session.delete(group)
+            db.session.commit()
+            return 'Grupo eliminado con éxito.'
+        except:
+            db.session.rollback()
+            return 'Hubo un error, intente de nuevo más tarde.'
+        
+class ClassSubject(db.Model):
     class_id = db.Column(db.Integer, primary_key=True)
+    class_name = db.Column(db.String(length=15))
+    class_code = db.Column(db.String(length=10), unique=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
+
+    @staticmethod
+    def _getCountSubjects():
+        count = ClassGroup.query.all()
+        if count is None: 
+            count = 1
+        else:
+            count = len(count)
+        return count
+
+    @staticmethod
+    def _getClassCode(code):
+        return ClassSubject.query.filter_by(class_code=code).first()
+
+    @staticmethod
+    def _getSubject(class_id=None, all=False):
+        if all:
+            return ClassSubject.query.all()
+        return ClassSubject.query.filter_by(class_id=class_id).first()
+
+    def _getTeacherGroup(self):
+        teacher = User.query.filter_by(
+            id= ClassRoom.query.filter_by(
+                room_id= ClassGroup.query.filter_by(
+                    group_id=self.group_id
+                ).room_id
+            ).first().teacher_id
+        ).first()
+        return teacher
+
+    def _getTasksClass(self, count=False):
+        tasks = Task.query.filter_by(group_id=self.group_id).first()
+        if count and tasks:
+            tasks = len(tasks)
+        elif tasks is None and count:
+            tasks = 'Ninguna'
+        return tasks
+    
+    @staticmethod
+    def addSubject(subject):
+        try:
+            db.session.add(subject)
+            db.session.commit()
+            return 'Grupo agregado con éxito.'
+        except:
+            db.session.rollback()
+            return 'Hubo un error, intente de nuevo más tarde.'
+
+class StudentGroup(db.Model):
+    student_group_id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
+
+    @staticmethod
+    def _getCountStudents():
+        count = StudentGroup.query.all()
+        if count is None: 
+            count = 1
+        else:
+            count = len(count)
+        return count
+
+    @staticmethod
+    def addStudent(user):
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+        
+class StudentClass(db.Model):
+    student_class_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    class_id = db.Column(db.Integer, db.ForeignKey('class_subject.class_id'))
 
     @staticmethod
     def _getCountStudents():
@@ -210,7 +301,7 @@ class StudentClass(db.Model):
 
 class Task(db.Model):
     task_id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
+    class_id = db.Column(db.Integer, db.ForeignKey('class_subject.class_id'))
     task_description = db.Column(db.String(length=1000))
     deliverie_date = db.Column(db.Date)
     is_active = db.Column(db.String(length=1), default="Y")
