@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block style %}
+    {{ super() }}
     <style type="text/css">
         #div_login{
             /*background-color: #9B9B9B;*/
@@ -158,6 +159,7 @@
     </body>
 {% endblock %}
 {% block script %}
+    {{ super() }}
     <script type="text/javascript">
         function choiceRegister(){
             Swal.fire({

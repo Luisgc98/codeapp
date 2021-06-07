@@ -1,71 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'base_nav.html' %}
 
 {% block style %}
+    {{ super() }}
     <style type="text/css">
-        body{
-            overflow: hidden;
-        }
-        .navbar{
-            background-color: #000734;
-            position: relative;
-            top: -1px;
-            border: transparent;
-        }
-        .navbar-brand{
-            position: relative;
-            left: 50px;
-        }
-        .navbar .navbar-brand img{
-            margin-top: -8px;
-            border-radius: 5px;
-        }
-        .navbar .navbar-brand #title_app{
-            position: relative;
-            bottom: 50px; left: 58px;
-            background-color: transparent;
-            color: white;
-            padding: 15px;
-            letter-spacing: 2px;
-            font-weight: bold;
-            border-top-right-radius: 20px;
-        }
-        #btn_logout{
-            margin-right: 15px;
-            background-color: transparent;
-            color: white;
-        }
-        #btn_opcs{
-            position: absolute;
-            font-size: 25px;
-            color: white;
-            top: 12px;
-            left: 13px;
-            align-items: center;
-            align-content: center;
-            text-align: center;
-            padding: 3px;
-            background-color: transparent;
-            border-radius: 3px;
-        }
-        #btn_opcs span{
-            margin-top: 5px;
-        }
-        .navigation{
-            display: inline-block;
-            position: relative;
-            top: -20px;
-            width: 55px;
-            min-height: 100vh;
-            background-color: #000734;
-        } 
-        .navigation a{
-            display: block;
-            text-align: center;
-            padding: 8px;
-            color: white;
-            font-size: 23px;
-            border-bottom: 1px solid white;
-        }
         .region{
             position: absolute;
             left: 100px;
@@ -126,88 +63,47 @@
     </style>
 {% endblock %}
 {% block app_content %}
-    <body>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <div id="btn_opcs">
-                        <span class="glyphicon glyphicon-menu-hamburger"></span>
-                    </div>
-                    <a class="navbar-brand" href="javascript:location.reload()">
-                        <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">
-                        <div id="title_app">
-                            CodeApp
-                        </div>
-                    </a>
-                </div>
-                <div class="navbar-text navbar-right">
-                    <div class="dropdown">
-                        <button type="button" id="btn_logout" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.email }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="btn_logout">
-                            <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            {% for message in get_flashed_messages() %}
-                <div class="alert alert-warning alert-dismissable">
-                    <button type="button"
-                            data-dismiss="alert"
-                            class="close"
-                    >&times;</button>
-                    {{message}}
-                </div>
-            {% endfor %}
-        </nav>
-        <div class="region">
-            <div class="modal-header">
-                <p class="modal-title">Salón de Clases</p>
-            </div>
-            <p class="modal-subtitle">Grupos</p>
-            <button type="button" class="btn btn-default btn-success" id="BTN_ADD_GROUP"
-            data-toggle="modal" data-target="#MODAL_ADD_GROUP">
-                <span class="glyphicon glyphicon-plus"></span>
-                Agregar grupo
-            </button>
+    {{ super() }}
+    <div class="region">
+        <div class="modal-header">
+            <p class="modal-title">Salón de Clases</p>
         </div>
-        <div class="region">
-            <div class="report">
-                <div class="row row-card">
-                    {% if groups %}
-                        {% for group in groups %}
-                            <div class="card card-group" onclick="javascript:location.href = '{{ url_for("main.group", group_id=group.group_id) }}'">
-                                <div class="card-icon">
-                                    <span class="glyphicon glyphicon-blackboard"></span>
-                                </div><div class="card-body">
-                                    <div class="body-header">
-                                        Grupo: {{ group.group_code }}
-                                    </div>
-                                    <div class="body-content">
-                                        Profesor: {{ group._getTeacherGroup().user_name }}
-                                    </div>
-                                    <div class="body-footer">
-                                        Tareas: {{ group._getTasksGroup(count=True) }}
-                                    </div>
+        <p class="modal-subtitle">Grupos</p>
+        <button type="button" class="btn btn-default btn-success" id="BTN_ADD_GROUP"
+        data-toggle="modal" data-target="#MODAL_ADD_GROUP">
+            <span class="glyphicon glyphicon-plus"></span>
+            Agregar grupo
+        </button>
+    </div>
+    <div class="region">
+        <div class="report">
+            <div class="row row-card">
+                {% if groups %}
+                    {% for group in groups %}
+                        <div class="card card-group" onclick="javascript:location.href = '{{ url_for("main.group", group_id=group.group_id) }}'">
+                            <div class="card-icon">
+                                <span class="glyphicon glyphicon-blackboard"></span>
+                            </div><div class="card-body">
+                                <div class="body-header">
+                                    Grupo: {{ group.group_code }}
+                                </div>
+                                <div class="body-content">
+                                    Profesor: {{ group._getTeacherGroup().user_name }}
+                                </div>
+                                <div class="body-footer">
+                                    Tareas: {{ group._getTasksGroup(count=True) }}
                                 </div>
                             </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
-        <div class="navigation">
-            <a href="{{ url_for('main.home') }}">
-                <span class="glyphicon glyphicon-home"></span>
-            </a>
-        </div>
-        <div class="modal fade" role="dialog" id="MODAL_ADD_GROUP">
-            {% include "modal/add_group_page.html" %}
-        </div>
-        <script type="text/javascript">
+    </div>
+    <div class="modal fade" role="dialog" id="MODAL_ADD_GROUP">
+        {% include "modal/add_group_page.html" %}
+    </div>
+    <script type="text/javascript">
 
-        </script>
-    </body>
+    </script>
 {% endblock %}

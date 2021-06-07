@@ -13,7 +13,6 @@ def login():
         user = form.validateUser()
         if type(user) == str:
             flash(user)
-            return redirect(url_for('auth.login'))
         else:
             login_user(user)
             flash('Bienvenido '+current_user.user_name)

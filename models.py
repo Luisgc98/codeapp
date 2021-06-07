@@ -203,6 +203,7 @@ class ClassSubject(db.Model):
     class_name = db.Column(db.String(length=15))
     class_code = db.Column(db.String(length=10), unique=True)
     group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
+    times = db.Column(db.String(length=50), default="De 09:00 a 01:00")
 
     @staticmethod
     def _getCountSubjects():
@@ -222,6 +223,10 @@ class ClassSubject(db.Model):
         if all:
             return ClassSubject.query.all()
         return ClassSubject.query.filter_by(class_id=class_id).first()
+
+    @staticmethod
+    def _getSubjectsGroup(group_id):
+        return ClassSubject.query.filter_by(group_id=group_id).all()
 
     def _getTeacherGroup(self):
         teacher = User.query.filter_by(

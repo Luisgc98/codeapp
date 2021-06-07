@@ -1,6 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'base_nav.html' %}
 
 {% block style %}
+    {{ super() }}
+    <script type="text/javascript">
+        window.onload = function(){
+            $(".navbar-navigation li").removeClass('active');
+        }
+    </script>
     <style type="text/css">
         body{
             overflow: hidden;
@@ -35,19 +41,20 @@
             color: white;
         }
         .region{
-            position: absolute;
+            position: relative;
             left: 100px;
             width: 80%;
+            margin-bottom: 15px;
         }
-        .region .modal-title{
+        .region .region-header .modal-title{
             letter-spacing: 3px;
             font-size: 30px;
         }
-        .region .modal-subtitle{
+        .region .region-header .modal-subtitle{
             letter-spacing: 3px;
             font-size: 20px;
         }
-        .region .report{
+        .region .region-header .report{
             margin: 10em auto;
         }
         #BTN_BACK{
@@ -69,104 +76,219 @@
         }
         #BTN_REMOVE_GROUP, 
         #TIMES_GROUP,
-        #ADD_CLASS,
         #ADD_STUDENT{
             z-index: 1;
             position: absolute;
             right: 10px;
-            top: 78px;
+            top: 115px;
             float: left;
         }
         #TIMES_GROUP{
-            right: 170px;
-        }
-        #ADD_CLASS{
-            right: 290px;
+            right: 160px;
+            background-color: #03116A;
+            color: white;
         }
         #ADD_STUDENT{
-            right: 460px;
+            right: 270px;
+        }
+        .navbar-navigation{
+            min-height: 30px;
+            position: relative;
+            top: -21px;
+            background-color: #000734;
+        }
+        .navbar-navigation li a{
+            color: white;
+            border: 1px solid white;
+        }
+        .region .region-body .sub-region{
+            width: 45%;
+            float: left;
+            padding: 10px;
+            margin: 27px;
+        }
+        .sub-region{
+            font-size: 20px;
+        }
+        #ADD_CLASS,
+        #ADD_TASK{
+            position: absolute;
+        }
+        .region .report{
+            margin: .5em auto;
+        }
+        .region .report .card{
+            border: 1px solid black;
+            border-radius: 5px;
+            width: 210px;
+            height: 90px;
+            margin: 10px;
+            float: left;
+            cursor: pointer;
+        }
+        .card-group .card-icon{
+            float: right;
+            background-color: #000734;
+            width: 60px;
+            height: 60px;
+            margin: 16px 12px 0 0;
+            border-radius: 50%;
+        }
+        .card-group .card-icon span{
+            font-size: 30px;
+            margin: 15px;
+            color: white;
+        }
+        .card-body{
+            margin: 20px;
+            width: 110px;
+            margin-top: 5px;
+        }
+        .card-body .body-header{
+            color:black;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #BDBDBD;
+            font-size: 12px;
+        }
+        .card-body .body-content{
+            font-size: 13px;
+        }
+        .report table{
+            font-size: 15px;
+        }
+        .calification-not-send{
+            color: red;
+        }
+        .calification-pending{
+            color: orange;
+        }
+        .calification-send{
+            color: green;
         }
     </style>
 {% endblock %}
 {% block app_content %}
-    <body>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <div id="BTN_BACK" onclick="javascript:location.href = '{{ url_for("main.home") }}'">
-                        <span class="glyphicon glyphicon-arrow-left"></span>
-                    </div>
-                    <a class="navbar-brand" href="javascript:location.reload()">
-                        <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">
-                        <div id="title_app">
-                            CodeApp
-                        </div>
-                    </a>
-                </div>
-                <div class="navbar-text navbar-right">
-                    <div class="dropdown">
-                        <button type="button" id="btn_logout" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.email }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="btn_logout">
-                            <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            {% for message in get_flashed_messages() %}
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button"
-                            data-dismiss="alert"
-                            class="close"
-                    >&times;</button>
-                    {{message}}
-                </div>
-            {% endfor %}
-        </nav>
-        <div class="region">
+    {{ super() }}
+    <div class="region">
+        <div class="region-header">
             <div class="modal-header">
                 <p class="modal-title">Grupo: {{ group.group_code }}</p>
+                <p class="modal-subtitle">Profesor: {{ group._getTeacherGroup().user_name }}</p>
             </div>
-            <p class="modal-subtitle">Profesor: {{ group._getTeacherGroup().user_name }}</p>
             <button type="button" class="btn btn-default btn-danger" id="BTN_REMOVE_GROUP"
             onclick="confirmDelete({{ group.group_id }})">
                 <span class="glyphicon glyphicon-remove"></span>
                 Remover grupo
             </button>
-            <button type="button" class="btn btn-default btn-primary" id="TIMES_GROUP">
+            <button type="button" class="btn btn-default" id="TIMES_GROUP">
                 <span class="glyphicon glyphicon-time"></span>
                 Horarios
-            </button>
-            <button type="button" class="btn btn-default btn-primary" id="ADD_CLASS">
-                <span class="glyphicon glyphicon-education"></span>
-                Agregar materia
             </button>
             <button type="button" class="btn btn-default btn-success" id="ADD_STUDENT">
                 <span class="glyphicon glyphicon-user"></span>
                 Agregar alumno
             </button>
         </div>
-        <div class="region">
-            
+    </div>
+    <div class="region">
+        <div class="region-body">
+            <div class="sub-region region-subjects" id="SUBJECTS">
+                <div class="modal-header">
+                    <button type="button" class="btn btn-default btn-primary" id="ADD_CLASS">
+                        <span class="glyphicon glyphicon-education"></span>
+                        Agregar materia
+                    </button>
+                    <p class="modal-title text-right">Materias</p>
+                </div>
+                <div class="report">
+                    <div class="row row-card">
+                        {% if subjects %}
+                            {% for subject in subjects %}
+                                <div class="card card-group">
+                                    <div class="card-icon">
+                                        <span class="glyphicon glyphicon-education"></span>
+                                    </div><div class="card-body">
+                                        <div class="body-header">
+                                            <b>Materia: </b>Programación
+                                        </div>
+                                        <div class="body-content">
+                                            Tareas: 0
+                                        </div>
+                                        <div class="body-footer">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% else %}
+                                <div class="container">
+                                    Sin materias
+                                </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="sub-region region-tasks" id="TASKS">
+                <div class="modal-header">
+                    <button type="button" class="btn btn-default btn-primary" id="ADD_TASK">
+                        <span class="glyphicon glyphicon-edit"></span>
+                        Agregar tarea
+                    </button>
+                    <p class="modal-title text-right">Tareas</p>
+                </div>
+                <div class="report">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Materia</th>
+                                <th scope="col">Fecha de entrega</th>
+                                <th scope="col">Calificación</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Programación</td>
+                                <td>15/06/2021</td>
+                                <td>9</td>
+                                <td>
+                                    <button type="button" id="BTN_SEND_TASK" class="btn btn-default">
+                                        Entregar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Programación</td>
+                                <td>15/06/2021</td>
+                                <td class="calification-not-send">Sin entregar</td>
+                                <td>
+                                    <button type="button" id="BTN_SEND_TASK" class="btn btn-default">
+                                        Entregar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <script type="text/javascript">
-            function confirmDelete(group_id){
-                Swal.fire({
-                    icon: 'warning',
-                    title: '¿Seguro de eliminar este grupo?',
-                    text: 'Se eliminaran todos los datos referentes a este grupo.',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancelar',
-                    confirmButtonText: 'Confirmar'
-                }).then((result) => {
-                    if(result.isConfirmed){
-                        var url = '{{ url_for("main.deleteGroup", group_id="") }}'+group_id;
-                        location.href = url;
-                    }
-                });
-            }
-        </script>
-    </body>
+    </div>
+    <script type="text/javascript">
+        function confirmDelete(group_id){
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Seguro de eliminar este grupo?',
+                text: 'Se eliminaran todos los datos referentes a este grupo.',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Confirmar'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    var url = '{{ url_for("main.deleteGroup", group_id="") }}'+group_id;
+                    location.href = url;
+                }
+            });
+        }
+    </script>
 {% endblock %}
