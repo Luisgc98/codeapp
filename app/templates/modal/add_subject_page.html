@@ -17,6 +17,7 @@
         margin-bottom: -10px;
         border: 1.5px solid black;
     }
+    .login-item .field-whit-btn,
     .login-item span{
         position: relative;
         top: -48px; left: 10px;
@@ -24,6 +25,9 @@
         z-index: 1;
         font-size: 18px;
         margin-right: 10px;
+    }
+    .login-item span{
+        top: -35px;
     }
     #BTN_ADD{
         background-color: #000734;
@@ -38,7 +42,7 @@
         left: 20px;
         bottom: 22px;
     }
-    .modal-header span{
+    .modal-dialog .modal-header span{
         position: absolute;
         top: 28px;
         font-size: 40px;
@@ -46,25 +50,16 @@
     #modal_title_icon{
         margin-left: 55px;
     }
-    #time_init{
-        float: left;
-    }
-    #time_end{
-        float: right;
-        margin-top: -76px;
-    }
-    .item-time #end label{
-        position: relative;
-        top: -75px;
-        left: 218px;
-    }
-    .field-time{
-        width: 180px;
-    }
     #GENERATE_CODE{
         position: relative;
         margin-bottom: 25px;
         left: 130px;
+    }
+    .item-time input{
+        width: 180px;
+    }
+    .item-time div{
+        float: left;
     }
 </style>
 <div class="modal-dialog">
@@ -73,18 +68,24 @@
             <button class="close" data-dismiss="modal" type="button">                    
                 &times;
             </button>
-            <span class="glyphicon glyphicon-blackboard"></span>
-            <div id="modal_title_icon"><h3>Agregar grupo</h3></div>
+            <span class="glyphicon glyphicon-education"></span>
+            <div id="modal_title_icon"><h3>Agregar materia</h3></div>
         </div>
-        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addGroup') }}">
+        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addSubject', group_id=group.group_id) }}">
             <div class="modal-content">
                 <div class="region-row">
                     <div class="region-items">
                         <div class="login-item">
-                            {{ wtf.form_field(form.group_code, placeholder="Código de grupo") }}
-                            <span class="glyphicon glyphicon-blackboard"></span>
+                            {{ wtf.form_field(form.class_code, placeholder="Código de materia") }}
+                            <span class="glyphicon glyphicon-qrcode field-whit-btn"></span>
                             <button type="button" class="btn btn-default" id="GENERATE_CODE" onclick="generateCode()">Generar código automáticamente</button>
-                            <!--<input type="text" class ="form-control" name="user_name" placeholder="Nombre de Usuario">-->
+                        </div>
+                    </div>
+                    {{ wtf.form_field(form.group_id, value=group.group_id, type="hidden") }}
+                    <div class="region-items">
+                        <div class="login-item">
+                            {{ wtf.form_field(form.subject_name, placeholder="Nombre de la materia") }}
+                            <span class="glyphicon glyphicon-education"></span>
                         </div>
                     </div>
                 </div>
@@ -104,9 +105,9 @@
 </div>
 <script type="text/javascript">
     function generateCode(){
-        var url = "{{ url_for('main.generateCode', table='') }}"+'group';
+        var url = "{{ url_for('main.generateCode', table='') }}"+'subject';
         $.get(url, function(result){
-            $("#group_code").val(result);
+            $("#class_code").val(result);
         })
     }
 </script>

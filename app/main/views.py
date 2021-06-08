@@ -1,8 +1,8 @@
 from . import main
 from flask import redirect, url_for, render_template, request, flash, current_app
 from flask_login import current_user, login_required
-from .forms import AddGroupForm
-from models import ClassGroup, ClassSubject, Task
+from .forms import AddGroupForm, AddSubjectForm
+from models import ClassGroup, ClassSubject, ClassTheme, Task
 import os
 
 @main.route('/home', methods=['GET', 'POST'])
@@ -34,18 +34,23 @@ def deleteGroup(group_id):
     flash(msg)
     return redirect(url_for('main.home'))
 
-@main.route('/generate_code', methods=['GET', 'POST'])
+@main.route('/generate_code/<table>', methods=['GET', 'POST'])
 @login_required
-def generateCode():
-    query = str(ClassGroup._getCountGroups())
-    if(len(query) < 2): query = '0'+query
-    result = 'GROUP_'+query
-
+def generateCode(table):
+    if table == 'group':
+        query = str(ClassGroup._getCountGroups())
+        if(len(query) < 2): query = '0'+query
+        result = 'GROUP_'+query
+    elif table == 'subject':
+        query = str(ClassSubject._getCountSubjects())
+        if(len(query) < 2): query = '0'+query
+        result = 'SUBJECT_'+query
     return result
 
 @main.route('/group/<group_id>', methods=['GET', 'POST'])
 @login_required
 def group(group_id):
+    form = AddSubjectForm()
     group = ClassGroup._getGroup(group_id=group_id)
     subjects = ClassSubject._getSubjectsGroup(group_id=group.group_id)
     activities = Task._getTasksGroup(group_id=group.group_id)
@@ -54,7 +59,29 @@ def group(group_id):
                            user=current_user, 
                            group=group, 
                            subjects=subjects,
-                           activities=activities)
+                           activities=activities,
+                           themes=None,
+                           form=form)
+
+@main.route('/add_subject/<group_id>', methods=['GET', 'POST'])
+@login_required
+def addSubject(group_id):
+    form = AddSubjectForm()
+    
+    if request.method == 'POST':
+        subject_valid = form.addSubject()
+        if type(subject_valid) == str:
+            flash(subject_valid)
+        else:
+            flash('Materia ya existente.')
+        return redirect(url_for('main.group', group_id=group_id))
+
+@main.route('/themes_subject/<subject_id>', methods=['GET', 'POST'])
+@login_required
+def themes_subject(subject_id):
+    themes = ClassTheme._getThemesSubject(subject_id=subject_id)
+    
+    return render_template('fragments/themes_subject.html', themes=themes)
 
 @main.route('/upload_file/<group_id>', methods=['GET', 'POST'])
 def upload(group_id):

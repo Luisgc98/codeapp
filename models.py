@@ -1,6 +1,6 @@
 from enum import unique
 from app import db
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from random import choice
 
 '''class BaseMixin(db.Model):
@@ -208,20 +208,19 @@ class ClassSubject(db.Model):
     class_name = db.Column(db.String(length=15))
     class_code = db.Column(db.String(length=10), unique=True)
     group_id = db.Column(db.Integer, db.ForeignKey('class_group.group_id'))
-    times = db.Column(db.String(length=50), default="De 09:00 a 01:00")
+    times = db.Column(db.Text, default="De 09:00 a 01:00")
 
     @staticmethod
     def _getCountSubjects():
-        count = ClassGroup.query.all()
-        if count is None: 
-            count = 1
-        else:
-            count = len(count)
+        count = len(ClassSubject.query.all())
         return count
 
     @staticmethod
-    def _getClassCode(code):
-        return ClassSubject.query.filter_by(class_code=code).first()
+    def _getClassCode(code, group_id):
+        return ClassSubject.query.filter_by(
+            class_code=code,
+            group_id=group_id
+        ).first()
 
     @staticmethod
     def _getSubject(class_id=None, all=False):
@@ -244,10 +243,12 @@ class ClassSubject(db.Model):
         return teacher
 
     def _getTasksClass(self, count=False):
-        tasks = Task.query.filter_by(group_id=self.group_id).first()
-        if count and tasks:
+        tasks = Task.query.filter_by(
+            class_id = self.class_id
+        ).all()
+        if count and len(tasks)>1:
             tasks = len(tasks)
-        elif tasks is None and count:
+        elif len(tasks) <1  and count:
             tasks = 'Ninguna'
         return tasks
     
@@ -256,7 +257,7 @@ class ClassSubject(db.Model):
         try:
             db.session.add(subject)
             db.session.commit()
-            return 'Grupo agregado con éxito.'
+            return 'Materia agregada con éxito.'
         except:
             db.session.rollback()
             return 'Hubo un error, intente de nuevo más tarde.'

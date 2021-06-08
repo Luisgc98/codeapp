@@ -1,8 +1,9 @@
 from flask import flash
+from flask.app import Flask
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, PasswordField, SubmitField, SelectField, IntegerField, HiddenField
 from wtforms.validators import DataRequired
-from models import ClassGroup, StudentClass, Teacher, User, ClassRoom, UserRole
+from models import ClassGroup, ClassSubject, StudentClass, Teacher, User, ClassRoom, UserRole
 from werkzeug.security import generate_password_hash, check_password_hash
 
 validators = [DataRequired()]
@@ -26,4 +27,25 @@ class AddGroupForm(FlaskForm):
                 room_id=self._getRoomId(user.id)
             )
             msg = ClassGroup.addGroup(group)
+            return msg
+
+class AddSubjectForm(FlaskForm):
+    subject_name = StringField('', validators=validators)
+    class_code = StringField('', validators=validators)
+    group_id = HiddenField('', validators=validators)
+    submit = SubmitField('Agregar')
+        
+    def addSubject(self):
+        subject_db = ClassSubject._getClassCode(self.class_code.data, self.group_id.data)
+        if subject_db:
+            return False
+        else:
+            subject = ClassSubject(
+                class_id=ClassSubject._getCountSubjects(),
+                class_name=self.subject_name.data,
+                class_code=self.class_code.data,
+                group_id=self.group_id.data,
+                times = 'Sin especificar'
+            )
+            msg = ClassSubject.addSubject(subject)
             return msg

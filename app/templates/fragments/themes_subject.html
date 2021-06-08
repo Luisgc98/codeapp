@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <button type="button" class="btn btn-default btn-primary" id="ADD_THEME">
+        <span class="glyphicon glyphicon-education"></span>
+        Agregar tema
+    </button>
+    <p class="modal-title text-right">Temas</p>
+</div>
+<div class="report">
+    <div class="row row-card">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Tema</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for theme in themes %}
+            <input type="hidden" id="THEME_ID" value="{{ theme.theme_id }}">
+                <tr>
+                    <td>theme.theme_name</td>
+                    <td>
+                        <button type="button" id="BTN_INFO_TASK" class="btn btn-default"
+                        data-toggle="modal" data-target="#MODAL_ACT_DESC">
+                            Descripción
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
