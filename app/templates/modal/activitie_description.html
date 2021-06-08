@@ -1,0 +1,44 @@
+<style type="text/css">
+    .modal-dialog .modal-header span{
+        position: absolute;
+        top: 28px;
+        font-size: 40px;
+    }
+    #modal_title_icon{
+        margin-left: 55px;
+    }
+</style>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal" type="button">                    
+                &times;
+            </button>
+            <span class="glyphicon glyphicon-check"></span>
+            <div id="modal_title_icon"><h3>Tema: </h3></div>
+            <p class="modal-subtitle">Materia: </p>
+        </div>
+        <div class="modal-content">
+            <div class="region-row">
+                <div class="region-description">
+
+                </div>
+                <div class=region-files>
+                    <form method="post" enctype="multipart/form-data" class="form form-group"
+                    action="{{ url_for('main.upload', group_id=group.group_id) }}">
+                        <input type="file" name="theme_file" class="form form-control">
+                        <input type="submit" value="Cargar archivo" class="btn btn-default">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function generateCode(){
+        var url = "{{ url_for('main.generateCode') }}";
+        $.get(url, function(result){
+            $("#group_code").val(result);
+        })
+    }
+</script>

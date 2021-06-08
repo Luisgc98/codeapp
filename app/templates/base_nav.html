@@ -9,9 +9,6 @@
     {% endblock %}
     {% block style %}
         <style type="text/css">
-            body{
-                overflow: hidden;
-            }
             .navbar{
                 background-color: #000734;
                 position: relative;
@@ -20,15 +17,18 @@
             }
             .navbar-brand{
                 position: relative;
-                left: 50px;
+                top: 5px;
+                left: 10px;
             }
-            .navbar .navbar-brand img{
+            .navbar .navbar-brand span{
                 margin-top: -8px;
                 border-radius: 5px;
+                color: white;
+                font-size: 38px;
             }
             .navbar .navbar-brand #title_app{
                 position: relative;
-                bottom: 50px; left: 58px;
+                bottom: 45px; left: 40px;
                 background-color: transparent;
                 color: white;
                 padding: 15px;
@@ -76,7 +76,7 @@
             .navbar-navigation{
                 min-height: 25px;
                 position: relative;
-                top: -21px;
+                top: -20px;
                 background-color: #000734;
             }
             .navbar-navigation li a{
@@ -94,7 +94,8 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <a class="navbar-brand" href="javascript:location.reload()">
-                            <img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">
+                            <!--<img src="{{ url_for('static', filename='img/logo_sinesis1.png') }}" alt="sinesis" height="50px" width="58px">-->
+                            <span class="glyphicon glyphicon-qrcode"></span>
                             <div id="title_app">
                                 CodeApp
                             </div>

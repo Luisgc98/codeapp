@@ -1,8 +1,9 @@
 from . import main
-from flask import redirect, url_for, render_template, request, flash
+from flask import redirect, url_for, render_template, request, flash, current_app
 from flask_login import current_user, login_required
 from .forms import AddGroupForm
-from models import ClassGroup, ClassSubject
+from models import ClassGroup, ClassSubject, Task
+import os
 
 @main.route('/home', methods=['GET', 'POST'])
 @login_required
@@ -47,5 +48,27 @@ def generateCode():
 def group(group_id):
     group = ClassGroup._getGroup(group_id=group_id)
     subjects = ClassSubject._getSubjectsGroup(group_id=group.group_id)
+    activities = Task._getTasksGroup(group_id=group.group_id)
     
-    return render_template('main/group.html', user=current_user, group=group, subjects=subjects)
+    return render_template('main/group.html', 
+                           user=current_user, 
+                           group=group, 
+                           subjects=subjects,
+                           activities=activities)
+
+@main.route('/upload_file/<group_id>', methods=['GET', 'POST'])
+def upload(group_id):
+    upload_folder = current_app.config['UPLOAD_FOLDER']
+    if request.method == 'POST':
+        file = request.files['theme_file']
+        filename = file.filename
+        dirs = os.listdir(upload_folder)
+        if str(group_id) in dirs:
+            pass
+        else:
+            os.mkdir(upload_folder+str(group_id))
+        path = os.path.join(upload_folder, str(group_id), filename)
+        file.save(path)
+        flash('Archivo subido con éxito.')
+        
+        return redirect(url_for('main.group', group_id=group_id))

@@ -27,6 +27,11 @@ class User(db.Model, UserMixin):
     user_name = db.Column(db.String(length=80))
     email = db.Column(db.String(length=200), unique=True)
     password = db.Column(db.String(length=100))
+    
+    def _getRole(self):
+        return Role.query.filter_by(
+            role_id = UserRole.query.filter_by(user_id=self.id).first().role_id
+        ).first()
 
     @staticmethod
     def _byID(id):
@@ -255,6 +260,59 @@ class ClassSubject(db.Model):
         except:
             db.session.rollback()
             return 'Hubo un error, intente de nuevo más tarde.'
+        
+class ClassTheme(db.Model):
+    theme_id = db.Column(db.Integer, primary_key=True)
+    theme_name = db.Column(db.String(length=15))
+    theme_code = db.Column(db.String(length=10), unique=True)
+    subject_id = db.Column(db.Integer, db.ForeignKey('class_subject.group_id'))
+    file = db.Column(db.String(length=1000))
+    description = db.Column(db.String(length=10000), default=False)
+
+    @staticmethod
+    def _getCountThemes():
+        count = ClassTheme.query.all()
+        if count is None: 
+            count = 1
+        else:
+            count = len(count)
+        return count
+
+    @staticmethod
+    def _getThemeCode(code):
+        return ClassTheme.query.filter_by(theme_code=code).first()
+
+    @staticmethod
+    def _getTheme(theme_id=None, all=False):
+        if all:
+            return ClassTheme.query.all()
+        return ClassTheme.query.filter_by(theme_id=theme_id).first()
+
+    @staticmethod
+    def _getThemesSubject(subject_id):
+        return ClassTheme.query.filter_by(subject_id=subject_id).all()
+
+    def _getTeacherTheme(self):
+        teacher = User.query.filter_by(
+            id= ClassRoom.query.filter_by(
+                room_id= ClassGroup.query.filter_by(
+                    group_id=ClassSubject.query.filter_by(
+                        class_id = self.subject_id
+                    ).first().group_id
+                ).room_id
+            ).first().teacher_id
+        ).first()
+        return teacher
+    
+    @staticmethod
+    def addTheme(theme):
+        try:
+            db.session.add(theme)
+            db.session.commit()
+            return 'Tema agregado con éxito.'
+        except:
+            db.session.rollback()
+            return 'Hubo un error, intente de nuevo más tarde.'
 
 class StudentGroup(db.Model):
     student_group_id = db.Column(db.Integer, primary_key=True)
@@ -310,6 +368,16 @@ class Task(db.Model):
     task_description = db.Column(db.String(length=1000))
     deliverie_date = db.Column(db.Date)
     is_active = db.Column(db.String(length=1), default="Y")
+    task_type = db.Column(db.String(length=50))
+    
+    
+    @staticmethod
+    def _getTasksGroup(group_id):
+        class_subject = ClassSubject.query.filter_by(group_id=group_id).first()
+        if class_subject is not None:
+            return Task.query.filter_by(class_id= class_subject.class_id).all()
+        else:
+            return False
 
     @staticmethod
     def _getCountTask():

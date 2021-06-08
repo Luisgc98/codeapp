@@ -8,38 +8,6 @@
         }
     </script>
     <style type="text/css">
-        body{
-            overflow: hidden;
-        }
-        .navbar{
-            background-color: #000734;
-            position: relative;
-            top: -1px;
-            border: transparent;
-        }
-        .navbar-brand{
-            position: relative;
-            left: 50px;
-        }
-        .navbar .navbar-brand img{
-            margin-top: -8px;
-            border-radius: 5px;
-        }
-        .navbar .navbar-brand #title_app{
-            position: relative;
-            bottom: 50px; left: 58px;
-            background-color: transparent;
-            color: white;
-            padding: 15px;
-            letter-spacing: 2px;
-            font-weight: bold;
-            border-top-right-radius: 20px;
-        }
-        #btn_logout{
-            margin-right: 15px;
-            background-color: transparent;
-            color: white;
-        }
         .region{
             position: relative;
             left: 100px;
@@ -91,16 +59,6 @@
         #ADD_STUDENT{
             right: 270px;
         }
-        .navbar-navigation{
-            min-height: 30px;
-            position: relative;
-            top: -21px;
-            background-color: #000734;
-        }
-        .navbar-navigation li a{
-            color: white;
-            border: 1px solid white;
-        }
         .region .region-body .sub-region{
             width: 45%;
             float: left;
@@ -111,7 +69,9 @@
             font-size: 20px;
         }
         #ADD_CLASS,
-        #ADD_TASK{
+        #ADD_TASK,
+        #ADD_THEME{
+            margin-left: -15px;
             position: absolute;
         }
         .region .report{
@@ -157,14 +117,22 @@
         .report table{
             font-size: 15px;
         }
-        .calification-not-send{
+        .expired-date-true{
             color: red;
         }
-        .calification-pending{
+        .expired-date-false{
             color: orange;
         }
-        .calification-send{
+        .expired-date-not{
             color: green;
+        }
+        .sub-region .modal-header p{
+            position: relative;
+            right: -260px;
+            width: 200px;
+        }
+        .sub-region .region-themes{
+            margin-top: 130px;
         }
     </style>
 {% endblock %}
@@ -193,87 +161,126 @@
     </div>
     <div class="region">
         <div class="region-body">
-            <div class="sub-region region-subjects" id="SUBJECTS">
-                <div class="modal-header">
-                    <button type="button" class="btn btn-default btn-primary" id="ADD_CLASS">
-                        <span class="glyphicon glyphicon-education"></span>
-                        Agregar materia
-                    </button>
-                    <p class="modal-title text-right">Materias</p>
-                </div>
-                <div class="report">
-                    <div class="row row-card">
-                        {% if subjects %}
-                            {% for subject in subjects %}
-                                <div class="card card-group">
-                                    <div class="card-icon">
-                                        <span class="glyphicon glyphicon-education"></span>
-                                    </div><div class="card-body">
-                                        <div class="body-header">
-                                            <b>Materia: </b>Programación
-                                        </div>
-                                        <div class="body-content">
-                                            Tareas: 0
-                                        </div>
-                                        <div class="body-footer">
-                                            
+            <div class="sub-region" id="SUBJECTS">
+                <div class="region-subjects">
+                    <div class="modal-header">
+                        <button type="button" class="btn btn-default btn-primary" id="ADD_CLASS">
+                            <span class="glyphicon glyphicon-education"></span>
+                            Agregar materia
+                        </button>
+                        <p class="modal-title text-right">Materias</p>
+                    </div>
+                    <div class="report">
+                        <div class="row row-card">
+                            {% if subjects %}
+                                {% for subject in subjects %}
+                                    <div class="card card-group">
+                                        <div class="card-icon">
+                                            <span class="glyphicon glyphicon-education"></span>
+                                        </div><div class="card-body">
+                                            <div class="body-header">
+                                                <b>Materia: </b>Programación
+                                            </div>
+                                            <div class="body-content">
+                                                Tareas: 0
+                                            </div>
+                                            <div class="body-footer">
+                                                
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                            {% else %}
-                                <div class="container">
-                                    Sin materias
-                                </div>
-                        {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                    <div class="container">
+                                        Sin materias
+                                    </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="region-themes">
+                    <div class="modal-header">
+                        <button type="button" class="btn btn-default btn-primary" id="ADD_THEME">
+                            <span class="glyphicon glyphicon-education"></span>
+                            Agregar tema
+                        </button>
+                        <p class="modal-title text-right">Temas</p>
+                    </div>
+                    <div class="report">
+                        <div class="row row-card">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Tema</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sintaxis básica</td>
+                                        <td>
+                                            <button type="button" id="BTN_INFO_TASK" class="btn btn-default"
+                                            data-toggle="modal" data-target="#MODAL_ACT_DESC">
+                                                Descripción
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="sub-region region-tasks" id="TASKS">
                 <div class="modal-header">
-                    <button type="button" class="btn btn-default btn-primary" id="ADD_TASK">
+                    <button type="button" class="btn btn-default btn-primary" id="ADD_TASK"
+                    {% if subjects %} enabled {% else %} disabled {% endif %}>
                         <span class="glyphicon glyphicon-edit"></span>
-                        Agregar tarea
+                        Agregar actividad
                     </button>
-                    <p class="modal-title text-right">Tareas</p>
+                    <p class="modal-title text-right">Actividades</p>
                 </div>
                 <div class="report">
-                    <table class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Materia</th>
-                                <th scope="col">Fecha de entrega</th>
-                                <th scope="col">Calificación</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Programación</td>
-                                <td>15/06/2021</td>
-                                <td>9</td>
-                                <td>
-                                    <button type="button" id="BTN_SEND_TASK" class="btn btn-default">
-                                        Entregar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Programación</td>
-                                <td>15/06/2021</td>
-                                <td class="calification-not-send">Sin entregar</td>
-                                <td>
-                                    <button type="button" id="BTN_SEND_TASK" class="btn btn-default">
-                                        Entregar
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {% if activities %}
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Materia</th>
+                                    <th scope="col">Fecha de entrega</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activitie in activities %}
+                                <tr>
+                                    <td>Programación</td>
+                                    <td>15/06/2021</td>
+                                    <td>Tarea</td>
+                                    <td>
+                                        <button type="button" id="BTN_INFO_TASK" class="btn btn-default">
+                                            Info
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div>
+                            Sin actividades
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal fade" role="dialog" id="MODAL_ACT_DESC">
+        {% include "modal/activitie_description.html" %}
+    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
     <script type="text/javascript">
         function confirmDelete(group_id){
             Swal.fire({
