@@ -11,7 +11,7 @@
         .region{
             position: relative;
             left: 100px;
-            width: 90%;
+            width: 84%;
             margin-bottom: 15px;
         }
         .region .region-header .modal-title{
@@ -80,9 +80,9 @@
         .region .report .card{
             border: 1px solid black;
             border-radius: 5px;
-            width: 255px;
+            width: 240px;
             height: 90px;
-            margin: 10px;
+            margin: 8px;
             float: left;
             cursor: pointer;
         }
@@ -106,7 +106,7 @@
         }
         .card-body .body-header{
             color:black;
-            margin-bottom: 10px;
+            margin-bottom: 3px;
             padding-bottom: 5px;
             border-bottom: 1px solid #BDBDBD;
             font-size: 12px;
@@ -137,11 +137,14 @@
         #BTN_DELETE_SUBJECT{
             background-color: red;
             position: relative;
+            top: -1px; left: 1px;
             float: right;
             height: 19%;
             z-index: 1;
             width: 10%;
             border-radius: 0 0 0 900px;
+            color: black;
+            border: 1px solid black;
         }
         #BTN_DELETE_SUBJECT span{
             position: relative;
@@ -151,19 +154,27 @@
         #BTN_EDIT_SUBJECT{
             background-color: orange;
             position: relative;
-            top: 71px; left: 25px;
+            top: 72px; left: 25px;
             float: right;
             height: 19%;
             z-index: 1;
             width: 10%;
+            border: 1px solid black;
             border-radius: 900px 0 0 0;
         }
         #BTN_EDIT_SUBJECT span{
             position: relative;
-            right: -9px;
-            top: -7px;
+            right: -8px;
+            top: -8.5px;
             font-size: 10px;
             color: black;
+        }
+        .card{
+            background-color: transparent;
+            transition: 0.3s ease-in-out 0.1s;
+        }
+        .card:hover{
+            background-color: #BDBDBD;
         }
     </style>
 {% endblock %}
@@ -212,7 +223,8 @@
                                                 &times;
                                             </span>
                                         </div>
-                                        <div id="BTN_EDIT_SUBJECT" onclick="editSubject({{ subject.class_id }})">
+                                        <div id="BTN_EDIT_SUBJECT" onclick="editSubject('{{ subject.class_id }}')"
+                                        data-toggle="modal" data-target="#MODAL_EDIT_SUBJECT">
                                             <span class="glyphicon glyphicon-edit"></span>
                                         </div>
                                         <div class="card-selector">
@@ -295,6 +307,9 @@
     <div class="modal fade" role="dialog" id="MODAL_ADD_SUBJECT">
         {% include "modal/add_subject_page.html" %}
     </div>
+    <div class="modal fade" role="dialog" id="MODAL_EDIT_SUBJECT">
+        {% include "modal/edit_subject_page.html" %}
+    </div>
 {% endblock %}
 {% block script %}
     {{ super() }}
@@ -315,10 +330,28 @@
             });
         }
         function deleteSubject(subject_id){
-            console.log(subject_id)
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Seguro de eliminar esta materia?',
+                text: 'Se eliminaran todos los datos referentes a esta materia.',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Confirmar'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    var url = '{{ url_for("main.deleteSubject", subject_id="") }}'+subject_id;
+                    location.href = url;
+                }
+            });
         }
         function editSubject(subject_id){
-            console.log(subject_id)
+            var url = '{{ url_for("main.getValuesSubject", subject_id=" ") }}'+subject_id;
+            $.get(url, function(subject){
+                subject = subject[0]
+                $("#subject_id").val(subject.subject_id);
+                $("#current_code").val(subject.class_code);
+                $("#new_name").val(subject.class_name)
+            })
         }
     </script>
 {% endblock %}

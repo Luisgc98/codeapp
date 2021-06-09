@@ -262,6 +262,26 @@ class ClassSubject(db.Model):
             db.session.rollback()
             return 'Hubo un error, intente de nuevo más tarde.'
         
+    @staticmethod
+    def deleteSubject(subject):
+        try:
+            db.session.delete(subject)
+            db.session.commit()
+            return 'Materia eliminada con éxito.'
+        except:
+            db.session.rollback()
+            return 'Hubo un error, intente de nuevo más tarde.'
+        
+    @staticmethod
+    def editSubject(subject, new_dates):
+        try:
+            db.session.delete(subject)
+            db.session.commit()
+            return 'Materia eliminada con éxito.'
+        except:
+            db.session.rollback()
+            return 'Hubo un error, intente de nuevo más tarde.'
+        
 class ClassTheme(db.Model):
     theme_id = db.Column(db.Integer, primary_key=True)
     theme_name = db.Column(db.String(length=15))

@@ -49,3 +49,41 @@ class AddSubjectForm(FlaskForm):
             )
             msg = ClassSubject.addSubject(subject)
             return msg
+        
+class EditSubjectForm(FlaskForm):
+    new_name = StringField('', validators=validators)
+    current_code = StringField('', validators=validators)
+    subject_id = HiddenField('', validators=validators)
+    init_time = StringField('', validators=validators)
+    end_time = StringField('', validators=validators)
+    edit = SubmitField('Actualizar')
+    
+    def _getValueSubjectName(self):
+        self.new_name.data = ClassSubject._getSubject(
+            class_id=self.subject_id.data
+        ).class_name
+        
+    def _getValueCurrentCode(self):
+        self.current_code.data = ClassSubject._getSubject(
+            class_id=self.subject_id.data
+        ).class_code
+        
+    def _getValueTimes(self):
+        self.current_code.data = ClassSubject._getSubject(
+            class_id=self.subject_id.data
+        ).times
+        
+    def addSubject(self):
+        subject_db = ClassSubject._getClassCode(self.class_code.data, self.group_id.data)
+        if subject_db:
+            return False
+        else:
+            subject = ClassSubject(
+                class_id=ClassSubject._getCountSubjects(),
+                class_name=self.subject_name.data,
+                class_code=self.class_code.data,
+                group_id=self.group_id.data,
+                times = 'Sin especificar'
+            )
+            msg = ClassSubject.addSubject(subject)
+            return msg

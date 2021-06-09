@@ -1,7 +1,7 @@
 from . import main
 from flask import redirect, url_for, render_template, request, flash, current_app
 from flask_login import current_user, login_required
-from .forms import AddGroupForm, AddSubjectForm
+from .forms import AddGroupForm, AddSubjectForm, EditSubjectForm
 from models import ClassGroup, ClassSubject, ClassTheme, Task
 import os
 
@@ -50,7 +50,8 @@ def generateCode(table):
 @main.route('/group/<group_id>', methods=['GET', 'POST'])
 @login_required
 def group(group_id):
-    form = AddSubjectForm()
+    form_subject = AddSubjectForm()
+    form_edit_subject = EditSubjectForm()
     group = ClassGroup._getGroup(group_id=group_id)
     subjects = ClassSubject._getSubjectsGroup(group_id=group.group_id)
     activities = Task._getTasksGroup(group_id=group.group_id)
@@ -61,7 +62,8 @@ def group(group_id):
                            subjects=subjects,
                            activities=activities,
                            themes=None,
-                           form=form)
+                           form_subject=form_subject,
+                           form_edit_subject=form_edit_subject)
 
 @main.route('/add_subject/<group_id>', methods=['GET', 'POST'])
 @login_required
@@ -74,6 +76,27 @@ def addSubject(group_id):
             flash(subject_valid)
         else:
             flash('Materia ya existente.')
+        return redirect(url_for('main.group', group_id=group_id))
+    
+@main.route('/delete_subject/<subject_id>', methods=['GET', 'POST'])
+@login_required
+def deleteSubject(subject_id):
+    subject = ClassSubject._getSubject(subject_id)
+    group_id = subject.group_id
+    msg = ClassSubject.deleteSubject(subject)
+    flash(msg)
+    return redirect(url_for('main.group', group_id=group_id))
+
+@main.route('/edit_subject/<subject_id>', methods=['GET', 'POST'])
+@login_required
+def editSubject(subject_id):
+    form = EditSubjectForm()
+    
+    if request.method == 'POST':
+        subject = ClassSubject._getSubject(subject_id)
+        group_id = subject.group_id
+        msg = ClassSubject.editSubject(subject, form)
+        flash(msg)
         return redirect(url_for('main.group', group_id=group_id))
 
 @main.route('/themes_subject/<subject_id>', methods=['GET', 'POST'])
@@ -90,12 +113,19 @@ def upload(group_id):
         file = request.files['theme_file']
         filename = file.filename
         dirs = os.listdir(upload_folder)
-        if str(group_id) in dirs:
-            pass
-        else:
-            os.mkdir(upload_folder+str(group_id))
         path = os.path.join(upload_folder, str(group_id), filename)
         file.save(path)
         flash('Archivo subido con éxito.')
         
         return redirect(url_for('main.group', group_id=group_id))
+    
+@main.route('/get_values_subject/<subject_id>')
+def getValuesSubject(subject_id):
+    form = EditSubjectForm()
+    subject = ClassSubject._getSubject(class_id=subject_id)
+    context = ({
+        'subject_id': subject.class_id,
+        'class_name': subject.class_name,
+        'class_code': subject.class_code
+    })
+    return render_template('modal/edit_subject_page.html', form_edit_subject=form)
