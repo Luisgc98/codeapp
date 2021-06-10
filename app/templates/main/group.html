@@ -101,7 +101,7 @@
         }
         .card-body{
             margin: 10px;
-            width: 110px;
+            width: 135px;
             margin-top: 5px;
         }
         .card-body .body-header{
@@ -347,10 +347,26 @@
         function editSubject(subject_id){
             var url = '{{ url_for("main.getValuesSubject", subject_id=" ") }}'+subject_id;
             $.get(url, function(subject){
-                subject = subject[0]
-                $("#subject_id").val(subject.subject_id);
-                $("#current_code").val(subject.class_code);
-                $("#new_name").val(subject.class_name)
+                $("#subject_id").val(subject.split('/-')[0]);
+                $("#current_code").val(subject.split('/-')[1]);
+                $("#new_name").val(subject.split('/-')[2]);
+                var times = JSON.parse(subject.split('/-')[3]);
+                var count = Object.keys(times).length;
+                console.log(count);
+                for(var i=0; i<count; i++){
+                    $("<div>",{
+                        'class': 'times-field times_field1'
+                    }).append(
+                        $("<input>", {
+                            'name': 'init_time'+i,
+                            'type': 'time',
+                            'class': 'form-control'
+                        }),
+                        $("<span>", {
+                            'class': 'glyphicon glyphicon-time'
+                        })
+                    ).hide().appendTo("#fields_times").fadeIn("slow");
+                }
             })
         }
     </script>

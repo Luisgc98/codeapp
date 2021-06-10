@@ -2,6 +2,7 @@ from enum import unique
 from app import db
 from flask_login import UserMixin, current_user
 from random import choice
+import json
 
 '''class BaseMixin(db.Model):
     CREATE_BY = db.Column(db.Integer)
@@ -252,6 +253,21 @@ class ClassSubject(db.Model):
             tasks = 'Ninguna'
         return tasks
     
+    def _getTimesSubject(self):
+        try:
+            return json.load(
+                ClassSubject.query.filter_by(
+                    class_id=self.class_id
+                ).first().times
+            )
+        except:
+            subject = ClassSubject.query.filter_by(
+                class_id=self.class_id
+            ).first()
+            subject.times = '{}'
+            db.session.commit()
+            return {}
+    
     @staticmethod
     def addSubject(subject):
         try:
@@ -275,9 +291,10 @@ class ClassSubject(db.Model):
     @staticmethod
     def editSubject(subject, new_dates):
         try:
-            db.session.delete(subject)
+            subject.class_name = str(new_dates.new_name.data)
+            subject.times = json.dumps(new_dates.times.data)
             db.session.commit()
-            return 'Materia eliminada con éxito.'
+            return 'Datos de la materia editados correctamente.'
         except:
             db.session.rollback()
             return 'Hubo un error, intente de nuevo más tarde.'

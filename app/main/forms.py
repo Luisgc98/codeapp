@@ -1,3 +1,4 @@
+import json
 from flask import flash
 from flask.app import Flask
 from flask_wtf import FlaskForm
@@ -51,27 +52,17 @@ class AddSubjectForm(FlaskForm):
             return msg
         
 class EditSubjectForm(FlaskForm):
-    new_name = StringField('', validators=validators)
+    new_name = StringField('Nombre de la materia', validators=validators)
     current_code = StringField('', validators=validators)
     subject_id = HiddenField('', validators=validators)
-    init_time = StringField('', validators=validators)
-    end_time = StringField('', validators=validators)
+    times = StringField('', validators=validators)
     edit = SubmitField('Actualizar')
-    
-    def _getValueSubjectName(self):
-        self.new_name.data = ClassSubject._getSubject(
-            class_id=self.subject_id.data
-        ).class_name
         
-    def _getValueCurrentCode(self):
-        self.current_code.data = ClassSubject._getSubject(
-            class_id=self.subject_id.data
-        ).class_code
-        
-    def _getValueTimes(self):
-        self.current_code.data = ClassSubject._getSubject(
-            class_id=self.subject_id.data
-        ).times
+    def _setTimes(self, subject):
+        times = subject._getTimesSubject()
+        new_time = {str(len(times)):str(self.times.data)}
+        times.update(new_time)
+        return times
         
     def addSubject(self):
         subject_db = ClassSubject._getClassCode(self.class_code.data, self.group_id.data)

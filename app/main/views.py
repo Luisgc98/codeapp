@@ -87,14 +87,16 @@ def deleteSubject(subject_id):
     flash(msg)
     return redirect(url_for('main.group', group_id=group_id))
 
-@main.route('/edit_subject/<subject_id>', methods=['GET', 'POST'])
+@main.route('/edit_subject', methods=['GET', 'POST'])
 @login_required
-def editSubject(subject_id):
+def editSubject():
     form = EditSubjectForm()
     
     if request.method == 'POST':
-        subject = ClassSubject._getSubject(subject_id)
+        subject = ClassSubject._getSubject(form.subject_id.data)
         group_id = subject.group_id
+        form.times.data = request.form['init_time'] + ' a: ' +request.form['end_time']
+        form.times.data = form._setTimes(subject)
         msg = ClassSubject.editSubject(subject, form)
         flash(msg)
         return redirect(url_for('main.group', group_id=group_id))
@@ -123,9 +125,11 @@ def upload(group_id):
 def getValuesSubject(subject_id):
     form = EditSubjectForm()
     subject = ClassSubject._getSubject(class_id=subject_id)
-    context = ({
-        'subject_id': subject.class_id,
-        'class_name': subject.class_name,
-        'class_code': subject.class_code
-    })
-    return render_template('modal/edit_subject_page.html', form_edit_subject=form)
+    context = (str(subject.class_id), str(subject.class_name), str(subject.class_code))
+    #return render_template('modal/edit_subject_page.html', form_edit_subject=form, subject=context)
+    return (
+        str(subject.class_id)+'/-'
+        +str(subject.class_code)+'/-'
+        +str(subject.class_name)+'/-'
+        +str(subject.times)
+    )

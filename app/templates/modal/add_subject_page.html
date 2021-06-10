@@ -26,8 +26,8 @@
         font-size: 18px;
         margin-right: 10px;
     }
-    .login-item span{
-        top: -35px;
+    .dialog-add-subject .login-item span{
+        top: -48px;
     }
     #BTN_ADD{
         background-color: #000734;
@@ -62,7 +62,7 @@
         float: left;
     }
 </style>
-<div class="modal-dialog">
+<div class="modal-dialog dialog-add-subject">
     <div class="modal-content">
         <div class="modal-header">
             <button class="close" data-dismiss="modal" type="button">                    
@@ -85,7 +85,7 @@
                     <div class="region-items">
                         <div class="login-item">
                             {{ wtf.form_field(form_subject.subject_name, placeholder="Nombre de la materia") }}
-                            <span class="glyphicon glyphicon-education"></span>
+                            <span class="glyphicon glyphicon-education" style="top: -33px;"></span>
                         </div>
                     </div>
                 </div>

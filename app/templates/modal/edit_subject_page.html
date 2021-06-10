@@ -1,6 +1,6 @@
 <style type="text/css">
     .login-item{
-        margin: -1em auto;
+        margin: 1em auto;
         width: 400px;
     }
     .login-item input{
@@ -28,6 +28,10 @@
     }
     .login-item span{
         top: -35px;
+    }
+    .login-item .field-whit-btn{
+        top: 3px;
+        margin-right: 14px;
     }
     #BTN_ADD{
         background-color: #000734;
@@ -61,6 +65,51 @@
     .item-time div{
         float: left;
     }
+    #current_code{
+        border: transparent;
+        width: 150px;
+        position: relative;
+        top: -34px;
+        left: 190px;
+    }
+    .region-items .times-field{
+        width: 80px;
+        float: left;
+        margin-left: 130px;
+    }
+    .times-field span{
+        top: -18px;
+        left: 10px;
+    }
+    .times-field input{
+        width: 180px;
+        background-color: transparent;
+        text-decoration-color: black;
+        /*opacity: .5;*/
+        color: black;
+        font-weight: bold;
+        font-size: 12px;
+        letter-spacing: 2px;
+        height: 40px;
+        padding-left: 35px;
+        border-radius: 9px;
+        margin-bottom: -10px;
+        border: 1.5px solid black;
+    }
+    #fields_times label{
+        position: relative;
+        top: -22px;
+        right: 290px;
+    }
+    #fields_times{
+        margin-left: -25px;
+    }
+    #a_de{
+        margin: 3px;
+        position: relative;
+        top: 10px;
+        left: -270px;
+    }
 </style>
 <div class="modal-dialog">
     <div class="modal-content">
@@ -71,20 +120,35 @@
             <span class="glyphicon glyphicon-education"></span>
             <div id="modal_title_icon"><h3>Editar materia</h3></div>
         </div>
-        <form name="form-edit-group" id="FORM_EDIT_GROUP" method="post" action="{{ url_for('main.editSubject', subject_id=' ') }}">
+        <form name="form-edit-group" id="FORM_EDIT_GROUP" method="post" action="{{ url_for('main.editSubject') }}">
             <div class="modal-content">
                 {{ wtf.form_field(form_edit_subject.subject_id, type="hidden") }}
                 <div class="region-row">
                     <div class="region-items">
                         <div class="login-item">
-                            {{ wtf.form_field(form_edit_subject.current_code, placeholder="Código de materia") }}
                             <span class="glyphicon glyphicon-qrcode field-whit-btn"></span>
+                            <label style="font-weight: 100;" for="current_code">Código único de materia:</label>
+                            {{ wtf.form_field(form_edit_subject.current_code, placeholder="Código de materia", class="code-field", disabled="disabled") }}
                         </div>
                     </div>
                     <div class="region-items">
                         <div class="login-item">
                             {{ wtf.form_field(form_edit_subject.new_name, placeholder="Nombre de la materia") }}
                             <span class="glyphicon glyphicon-education"></span>
+                        </div>
+                    </div>
+                    <div class="region-items">
+                        <div id="fields_times" class="row">
+                            <label for="times">Horarios de esta materia</label>
+                            <div class="times-field times_field1">
+                                <input name="init_time" id="init_time" type="time" class="form-control">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
+                            <span id="a_de">a:</span>
+                            <div class="times-field times_field2">
+                                <input name="end_time" id="end_time" type="time" class="form-control">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
