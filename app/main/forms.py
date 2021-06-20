@@ -55,7 +55,7 @@ class EditSubjectForm(FlaskForm):
     new_name = StringField('Nombre de la materia', validators=validators)
     current_code = StringField('', validators=validators)
     subject_id = HiddenField('', validators=validators)
-    times = StringField('', validators=validators)
+    #times = StringField('', validators=validators)
     edit = SubmitField('Actualizar')
         
     def _setTimes(self, subject):
@@ -74,7 +74,18 @@ class EditSubjectForm(FlaskForm):
                 class_name=self.subject_name.data,
                 class_code=self.class_code.data,
                 group_id=self.group_id.data,
-                times = 'Sin especificar'
+                times = '{}'
             )
             msg = ClassSubject.addSubject(subject)
             return msg
+
+class AddThemeSubjectForm(FlaskForm):
+    theme_id = HiddenField()
+    theme_name = StringField('', validators=validators)
+    theme_code = StringField('', validators=validators)
+    subject_id = HiddenField()
+    file = StringField('')
+    description = StringField('')
+    submit = SubmitField('Agregar tema')
+
+    

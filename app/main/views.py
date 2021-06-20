@@ -1,7 +1,7 @@
 from . import main
 from flask import redirect, url_for, render_template, request, flash, current_app
 from flask_login import current_user, login_required
-from .forms import AddGroupForm, AddSubjectForm, EditSubjectForm
+from .forms import AddGroupForm, AddSubjectForm, AddThemeSubjectForm, EditSubjectForm
 from models import ClassGroup, ClassSubject, ClassTheme, Task
 import os
 
@@ -52,6 +52,7 @@ def generateCode(table):
 def group(group_id):
     form_subject = AddSubjectForm()
     form_edit_subject = EditSubjectForm()
+    form_theme = AddThemeSubjectForm()
     group = ClassGroup._getGroup(group_id=group_id)
     subjects = ClassSubject._getSubjectsGroup(group_id=group.group_id)
     activities = Task._getTasksGroup(group_id=group.group_id)
@@ -63,7 +64,8 @@ def group(group_id):
                            activities=activities,
                            themes=None,
                            form_subject=form_subject,
-                           form_edit_subject=form_edit_subject)
+                           form_edit_subject=form_edit_subject,
+                           form_theme=form_theme)
 
 @main.route('/add_subject/<group_id>', methods=['GET', 'POST'])
 @login_required
@@ -95,8 +97,8 @@ def editSubject():
     if request.method == 'POST':
         subject = ClassSubject._getSubject(form.subject_id.data)
         group_id = subject.group_id
-        form.times.data = request.form['init_time'] + ' a: ' +request.form['end_time']
-        form.times.data = form._setTimes(subject)
+        #form.times.data = request.form['init_time'] + ' a: ' +request.form['end_time']
+        #form.times.data = form._setTimes(subject)
         msg = ClassSubject.editSubject(subject, form)
         flash(msg)
         return redirect(url_for('main.group', group_id=group_id))

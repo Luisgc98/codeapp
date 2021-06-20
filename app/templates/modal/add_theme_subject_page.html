@@ -26,7 +26,7 @@
         font-size: 18px;
         margin-right: 10px;
     }
-    .dialog-add-subject .login-item span{
+    .dialog-add-theme .login-item span{
         top: -48px;
     }
     #BTN_ADD{
@@ -62,29 +62,28 @@
         float: left;
     }
 </style>
-<div class="modal-dialog dialog-add-subject">
+<div class="modal-dialog dialog-add-theme">
     <div class="modal-content">
         <div class="modal-header">
             <button class="close" data-dismiss="modal" type="button">                    
                 &times;
             </button>
             <span class="glyphicon glyphicon-education"></span>
-            <div id="modal_title_icon"><h3>Agregar materia</h3></div>
+            <div id="modal_title_icon"><h3>Agregar tema</h3></div>
         </div>
-        <form name="form-add-group" id="FORM_ADD_GROUP" method="post" action="{{ url_for('main.addSubject', group_id=group.group_id) }}">
-        {{ form_subject.hidden_tag() }}
+        <form name="form-add-theme" id="FORM_ADD_THEME" method="post" action="{{ url_for('main.addThemeSubject', group_id=group.group_id) }}">
             <div class="modal-content">
                 <div class="region-row">
                     <div class="region-items">
                         <div class="login-item">
-                            {{ wtf.form_field(form_subject.class_code, placeholder="Código de materia") }}
+                            {{ wtf.form_field(form_theme.theme_code, placeholder="Código del Tema") }}
                             <span class="glyphicon glyphicon-qrcode field-whit-btn"></span>
                             <button type="button" class="btn btn-default" id="GENERATE_CODE" onclick="generateCode()">Generar código automáticamente</button>
                         </div>
                     </div>
                     <div class="region-items">
                         <div class="login-item">
-                            {{ wtf.form_field(form_subject.subject_name, placeholder="Nombre de la materia") }}
+                            {{ wtf.form_field(form_theme.theme_name, placeholder="Nombre de la Tema") }}
                             <span class="glyphicon glyphicon-education" style="top: -33px;"></span>
                         </div>
                     </div>
@@ -97,7 +96,7 @@
                     </button>
                 </div>
                 <div class="btn">
-                    {{ wtf.form_field(form_subject.submit, id="BTN_ADD", onclick="setGroupId('{{ group.group_id }}')") }}
+                    {{ wtf.form_field(form_theme.submit, id="BTN_ADD") }}
                 </div>
             </div>
         </form>
@@ -109,8 +108,5 @@
         $.get(url, function(result){
             $("#class_code").val(result);
         })
-    }
-    function setGroupId(group_id){
-        $("#group_id").val(group_id);
     }
 </script>

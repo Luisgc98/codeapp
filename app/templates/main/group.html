@@ -60,7 +60,7 @@
             right: 270px;
         }
         .region .region-body .sub-region{
-            width: 45%;
+            width: 47%;
             float: left;
             padding: 10px;
             margin: 27px;
@@ -129,7 +129,7 @@
         .sub-region .modal-header p{
             position: relative;
             right: -260px;
-            width: 200px;
+            width: 500px;
         }
         .sub-region .region-themes{
             margin-top: 130px;
@@ -201,7 +201,7 @@
             </button>
         </div>
     </div>
-    <div class="region">
+    <div class="region" style="width: 97%; margin: auto -5em;">
         <div class="region-body">
             <div class="sub-region" id="SUBJECTS">
                 <div class="region-subjects">
@@ -217,7 +217,7 @@
                         <div class="row row-card">
                             {% if subjects %}
                                 {% for subject in subjects %}
-                                    <div class="card card-group">
+                                    <div class="card card-group" onclick="themes_subject('{{ subject.class_id }}')">
                                         <div id="BTN_DELETE_SUBJECT" onclick="deleteSubject({{ subject.class_id }})">
                                             <span>
                                                 &times;
@@ -350,24 +350,15 @@
                 $("#subject_id").val(subject.split('/-')[0]);
                 $("#current_code").val(subject.split('/-')[1]);
                 $("#new_name").val(subject.split('/-')[2]);
-                var times = JSON.parse(subject.split('/-')[3]);
-                var count = Object.keys(times).length;
-                console.log(count);
-                for(var i=0; i<count; i++){
-                    $("<div>",{
-                        'class': 'times-field times_field1'
-                    }).append(
-                        $("<input>", {
-                            'name': 'init_time'+i,
-                            'type': 'time',
-                            'class': 'form-control'
-                        }),
-                        $("<span>", {
-                            'class': 'glyphicon glyphicon-time'
-                        })
-                    ).hide().appendTo("#fields_times").fadeIn("slow");
-                }
+                //var times = JSON.parse(subject.split('/-')[3]);
+                //var count = Object.keys(times).length;
+                //console.log(count);
             })
+        }
+        function themes_subject(subject_id){
+            //this.style.backgroundColor = "#BDBDBD";
+            var url = '{{ url_for("main.themes_subject", subject_id="") }}'+subject_id;
+            $("#REGION_THEMES").load(url);
         }
     </script>
 {% endblock %}
